@@ -1,15 +1,22 @@
 using UnityEngine;
+using UnityEngine.UI; 
 
 public class PlayerController : MonoBehaviour
 {
     private float lastLoudness;
+    private float baselineVolume = 0f; 
     private const float visibilityDuration = 2f; // Time to keep objects visible after activation (in seconds)
-    private const string mapLayerName = "MapLayer"; // The name of your map layer
+    private const string mapLayerName = "MapLayer"; 
     private AudioClip microphoneClip; // Store the microphone audio clip
+    private const float baselineCalibrationTime = 1f; // Time to calibrate the baseline
+
+    public Slider loudnessSlider; 
+    public float sensitivity = 0.001f; 
 
     void Start()
     {
         StartMicrophone();
+        StartCoroutine(CalibrateBaseline());
     }
 
     private void StartMicrophone()
@@ -36,6 +43,7 @@ public class PlayerController : MonoBehaviour
         {
             microphoneClip.GetData(data, 0); // Get audio data from the microphone clip
             float loudness = GetAverageVolume(data);
+            UpdateLoudnessIndicator(loudness); // Update the slider with loudness
             RevealMap(loudness);
             lastLoudness = loudness;
         }
@@ -53,13 +61,13 @@ public class PlayerController : MonoBehaviour
 
     private void RevealMap(float loudness)
     {
-        // Lower the threshold for loudness to reveal the map
-        float revealThreshold = 0.001f; // Lowered to make it more sensitive
+        // Lower the threshold to make the system more sensitive
+        float activationThreshold = baselineVolume + sensitivity; 
 
-        if (loudness > revealThreshold) // Change this threshold if needed
+        if (loudness > activationThreshold) // Check if current loudness exceeds the new sensitive baseline
         {
             // Find all objects on the MapLayer and reveal them
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject")) // Ensure your map objects are tagged appropriately
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject")) 
             {
                 SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
                 if (renderer != null)
@@ -95,5 +103,40 @@ public class PlayerController : MonoBehaviour
                 renderer.color = color;
             }
         }
+    }
+
+    private void UpdateLoudnessIndicator(float loudness)
+    {
+        // Assuming the loudness is normalized between 0 and 1
+        if (loudnessSlider != null)
+        {
+            loudnessSlider.value = loudness; // Set the slider value based on the current loudness
+        }
+    }
+
+    private System.Collections.IEnumerator CalibrateBaseline()
+    {
+        float sum = 0f;
+        int samples = 0;
+        float[] data = new float[256];
+
+        // Record for a certain duration to establish baseline volume
+        float calibrationDuration = 0f;
+
+        while (calibrationDuration < baselineCalibrationTime)
+        {
+            int position = Microphone.GetPosition(Microphone.devices[0]);
+            if (position > 0)
+            {
+                microphoneClip.GetData(data, 0); // Get audio data from the microphone clip
+                sum += GetAverageVolume(data);
+                samples++;
+            }
+            calibrationDuration += Time.deltaTime;
+            yield return null; // Wait for the next frame
+        }
+
+        // Calculate average volume over the calibration period
+        baselineVolume = sum / samples;
     }
 }
