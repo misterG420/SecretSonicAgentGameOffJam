@@ -1,29 +1,30 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private float lastLoudness;
-    private float baselineVolume = 0f; 
-    private const float visibilityDuration = 2f; // Time to keep objects visible after activation (in seconds)
-    private const string mapLayerName = "MapLayer"; 
-    private AudioClip microphoneClip; // Store the microphone audio clip
-    private const float baselineCalibrationTime = 1f; // Time to calibrate the baseline
-
-    public Slider loudnessSlider; 
-    public float sensitivity = 0.001f; 
+    private float baselineLoudness = 0f;
+    private float silenceDuration = 0f;
+    public float resetTime = 2f; // Time to keep objects visible after activation
+    private AudioClip microphoneClip;
+    public Slider loudnessSlider;
+    public float amplificationFactor = 30f; // Sensitivity control
+    private bool isMapRevealed = false;
+    private float revealTimer = 0f;
+    private bool isBaselineSet = false;
+    private float baselineCaptureTime = 2f; // Time to capture baseline loudness
+    private float baselineTimer = 0f;
 
     void Start()
     {
         StartMicrophone();
-        StartCoroutine(CalibrateBaseline());
+        SetMapObjectsAlpha(0); // Set all map objects to alpha 0 by default
     }
 
     private void StartMicrophone()
     {
         if (Microphone.devices.Length > 0)
         {
-            // Start recording from the microphone without looping
             microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
         }
     }
@@ -38,36 +39,65 @@ public class PlayerController : MonoBehaviour
         float[] data = new float[256];
         int position = Microphone.GetPosition(Microphone.devices[0]);
 
-        // Check if the microphone is currently recording
         if (position > 0)
         {
-            microphoneClip.GetData(data, 0); // Get audio data from the microphone clip
-            float loudness = GetAverageVolume(data);
-            UpdateLoudnessIndicator(loudness); // Update the slider with loudness
-            RevealMap(loudness);
-            lastLoudness = loudness;
+            microphoneClip.GetData(data, 0);
+            float loudness = GetNormalizedLoudness(data);
+            UpdateLoudnessSlider(loudness);
+
+            // Capture baseline loudness during the initial period
+            if (!isBaselineSet)
+            {
+                baselineTimer += Time.deltaTime;
+
+                baselineLoudness += loudness; // Sum loudness for averaging
+                if (baselineTimer >= baselineCaptureTime)
+                {
+                    baselineLoudness /= baselineCaptureTime; // Calculate average loudness
+                    isBaselineSet = true;
+                }
+                return; // Do nothing until the baseline is set
+            }
+
+            // Check if loudness exceeds baseline threshold by 1%
+            if (loudness > baselineLoudness * 1.01f)
+            {
+                RevealMap();
+                revealTimer = resetTime; // Reset the timer to 2 seconds
+            }
+
+            if (revealTimer > 0)
+            {
+                revealTimer -= Time.deltaTime;
+            }
+            else if (isMapRevealed)
+            {
+                ResetMap();
+            }
         }
     }
 
-    private float GetAverageVolume(float[] data)
+    private float GetNormalizedLoudness(float[] data)
     {
         float sum = 0f;
         for (int i = 0; i < data.Length; i++)
         {
             sum += Mathf.Abs(data[i]);
         }
-        return sum / data.Length;
+        float avgLoudness = sum / data.Length;
+        return avgLoudness * amplificationFactor;
     }
 
-    private void RevealMap(float loudness)
+    private void UpdateLoudnessSlider(float loudness)
     {
-        // Lower the threshold to make the system more sensitive
-        float activationThreshold = baselineVolume + sensitivity; 
+        loudnessSlider.value = loudness;
+    }
 
-        if (loudness > activationThreshold) // Check if current loudness exceeds the new sensitive baseline
+    private void RevealMap()
+    {
+        if (!isMapRevealed)
         {
-            // Find all objects on the MapLayer and reveal them
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject")) 
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
             {
                 SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
                 if (renderer != null)
@@ -77,22 +107,12 @@ public class PlayerController : MonoBehaviour
                     renderer.color = color;
                 }
             }
-
-            // Start a coroutine to reset the map after a delay of 2 seconds
-            StartCoroutine(ResetMapAfterDelay());
+            isMapRevealed = true;
         }
-    }
-
-    private System.Collections.IEnumerator ResetMapAfterDelay()
-    {
-        // Wait for the specified visibility duration before resetting the map
-        yield return new WaitForSeconds(visibilityDuration);
-        ResetMap();
     }
 
     private void ResetMap()
     {
-        // Reset all objects on the MapLayer
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
         {
             SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
@@ -103,40 +123,20 @@ public class PlayerController : MonoBehaviour
                 renderer.color = color;
             }
         }
+        isMapRevealed = false;
     }
 
-    private void UpdateLoudnessIndicator(float loudness)
+    private void SetMapObjectsAlpha(float alpha)
     {
-        // Assuming the loudness is normalized between 0 and 1
-        if (loudnessSlider != null)
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
         {
-            loudnessSlider.value = loudness; // Set the slider value based on the current loudness
-        }
-    }
-
-    private System.Collections.IEnumerator CalibrateBaseline()
-    {
-        float sum = 0f;
-        int samples = 0;
-        float[] data = new float[256];
-
-        // Record for a certain duration to establish baseline volume
-        float calibrationDuration = 0f;
-
-        while (calibrationDuration < baselineCalibrationTime)
-        {
-            int position = Microphone.GetPosition(Microphone.devices[0]);
-            if (position > 0)
+            SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
+            if (renderer != null)
             {
-                microphoneClip.GetData(data, 0); // Get audio data from the microphone clip
-                sum += GetAverageVolume(data);
-                samples++;
+                Color color = renderer.color;
+                color.a = alpha; // Set the alpha to the specified value
+                renderer.color = color;
             }
-            calibrationDuration += Time.deltaTime;
-            yield return null; // Wait for the next frame
         }
-
-        // Calculate average volume over the calibration period
-        baselineVolume = sum / samples;
     }
 }
