@@ -3,8 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private float lastLoudness;
-    private float silenceDuration = 0f;
-    public float resetTime = 1f; // Time to wait before resetting alpha (in seconds)
+    private const float visibilityDuration = 2f; // Time to keep objects visible after activation (in seconds)
     private const string mapLayerName = "MapLayer"; // The name of your map layer
     private AudioClip microphoneClip; // Store the microphone audio clip
 
@@ -39,20 +38,6 @@ public class PlayerController : MonoBehaviour
             float loudness = GetAverageVolume(data);
             RevealMap(loudness);
             lastLoudness = loudness;
-
-            if (loudness < 0.01f) // Define a threshold for silence
-            {
-                silenceDuration += Time.deltaTime;
-                if (silenceDuration >= resetTime)
-                {
-                    ResetMap();
-                    silenceDuration = 0f; // Reset the duration after resetting the map
-                }
-            }
-            else
-            {
-                silenceDuration = 0f; // Reset silence timer if sound is detected
-            }
         }
     }
 
@@ -69,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private void RevealMap(float loudness)
     {
         // Lower the threshold for loudness to reveal the map
-        float revealThreshold = 0.005f; // Adjust this value to change sensitivity
+        float revealThreshold = 0.001f; // Lowered to make it more sensitive
 
         if (loudness > revealThreshold) // Change this threshold if needed
         {
@@ -84,7 +69,17 @@ public class PlayerController : MonoBehaviour
                     renderer.color = color;
                 }
             }
+
+            // Start a coroutine to reset the map after a delay of 2 seconds
+            StartCoroutine(ResetMapAfterDelay());
         }
+    }
+
+    private System.Collections.IEnumerator ResetMapAfterDelay()
+    {
+        // Wait for the specified visibility duration before resetting the map
+        yield return new WaitForSeconds(visibilityDuration);
+        ResetMap();
     }
 
     private void ResetMap()
@@ -102,5 +97,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-
-
