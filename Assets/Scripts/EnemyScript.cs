@@ -1,43 +1,49 @@
 using UnityEngine;
+using System;
 
 public class EnemyScript : MonoBehaviour
 {
-    public Transform[] patrolPoints;   // Points the enemy will patrol between
-    public float patrolSpeed = 2f;     // Speed while patrolling
-    public float chaseSpeed = 4f;      // Speed when chasing the player
-    public float detectionRadius = 5f; // Radius to detect the player
+    public Transform[] patrolPoints;
+    public float patrolSpeed = 2f;
+    public float detectionRadius = 5f; // Radius for detecting the player to end the game
 
-    private int currentPatrolIndex = 0;  // Current patrol point index
-    private Transform player;           // Reference to the player
-    private bool isChasing = false;     // Whether the enemy is chasing the player
-    private Vector3 targetPosition;     // Target position for movement
-    private Rigidbody2D rb;             // Reference to the Rigidbody2D for movement
+    private int currentPatrolIndex = 0;
+    private Vector3 targetPosition;
+    private bool isMovingToEvent = false;
+    private Vector3 eventPosition;
+    private Rigidbody2D rb;
+
+    // Event for game over
+    public static event Action OnGameOver;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D for physics-based movement
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player
+        rb = GetComponent<Rigidbody2D>();
 
+        // Initial patrol target
         if (patrolPoints.Length > 0)
-        {
             targetPosition = patrolPoints[currentPatrolIndex].position;
-        }
 
-        // Subscribe to the OnPlayerHit event from ObstacleCollision
-        ObstacleCollision.OnPlayerHit += StartChasing;
+        // Subscribe to player hit events
+        ObstacleCollision.OnPlayerHit += MoveToEventPosition;
     }
 
     void Update()
     {
-        if (!isChasing)
+        if (isMovingToEvent)
         {
-            // Patrol behavior
-            Patrol();
+            // Move towards the event position
+            MoveTowardsTarget(eventPosition, patrolSpeed);
+
+            // Check if the enemy has reached the event position
+            if (Vector3.Distance(transform.position, eventPosition) <= 0.2f)
+            {
+                isMovingToEvent = false; // Stop moving to event and resume patrol
+            }
         }
         else
         {
-            // If chasing, move toward the player
-            ChasePlayer();
+            Patrol();
         }
     }
 
@@ -46,7 +52,7 @@ public class EnemyScript : MonoBehaviour
         // Move towards the current patrol point
         if (Vector3.Distance(transform.position, targetPosition) <= 0.2f)
         {
-            // Update to the next patrol point
+            // Go to the next patrol point
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
             targetPosition = patrolPoints[currentPatrolIndex].position;
         }
@@ -54,36 +60,41 @@ public class EnemyScript : MonoBehaviour
         MoveTowardsTarget(targetPosition, patrolSpeed);
     }
 
-    void ChasePlayer()
-    {
-        // Move towards the player
-        MoveTowardsTarget(player.position, chaseSpeed);
-    }
-
     void MoveTowardsTarget(Vector3 target, float speed)
     {
-        // Calculate the direction to the target
         Vector3 direction = (target - transform.position).normalized;
-
-        // Move the enemy using Rigidbody2D to avoid relying on NavMesh
         rb.velocity = direction * speed;
     }
 
-    public void StartChasing(Vector3 obstaclePosition)
+    public void MoveToEventPosition(Vector3 playerPosition)
     {
-        // Check if the enemy is within the detection radius of the obstacle
-        float distanceToObstacle = Vector3.Distance(transform.position, obstaclePosition);
-
-        if (distanceToObstacle <= detectionRadius)
+        // Only move to event if within detection range of the obstacle
+        if (Vector3.Distance(transform.position, playerPosition) <= detectionRadius)
         {
-            isChasing = true;
-            Debug.Log(gameObject.name + " is now chasing the player.");
+            isMovingToEvent = true;
+            eventPosition = playerPosition;
         }
     }
 
-    // Optional: Unsubscribe from the event if needed (e.g., if the enemy is destroyed)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player detected - Game Over!");
+            OnGameOver?.Invoke(); // Trigger game over
+        }
+    }
+
     void OnDestroy()
     {
-        ObstacleCollision.OnPlayerHit -= StartChasing;
+        // Unsubscribe from events on destroy
+        ObstacleCollision.OnPlayerHit -= MoveToEventPosition;
+    }
+
+    // Draw detection radius in the editor for game over range
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

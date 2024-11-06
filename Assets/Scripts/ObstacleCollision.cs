@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ObstacleCollision : MonoBehaviour
 {
-    public float detectionRadius = 5f; // The radius of the circle to detect nearby enemies
+    public float detectionRadius = 5f; // The radius to detect nearby enemies when the player hits this obstacle
 
-    // Define a delegate and event for broadcasting
-    public delegate void PlayerHitEvent(Vector3 obstaclePosition);
+    // Define a delegate and event for broadcasting the obstacle's event
+    public delegate void PlayerHitEvent(Vector3 playerPosition);
     public static event PlayerHitEvent OnPlayerHit;
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -13,42 +13,37 @@ public class ObstacleCollision : MonoBehaviour
         // Check if the object collided with the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Invoke the event for all listeners, passing the obstacle's position
-            OnPlayerHit?.Invoke(transform.position);
+            // Capture the player's position when the collision occurs
+            Vector3 playerPosition = collision.transform.position;
 
-            // Broadcast event to enemies within the detection radius
-            BroadcastToEnemies();
+            // Invoke the event for all listeners, passing the player's position
+            OnPlayerHit?.Invoke(playerPosition);
+
+            // Broadcast to nearby enemies
+            BroadcastToEnemies(playerPosition);
         }
     }
 
-    void BroadcastToEnemies()
+    void BroadcastToEnemies(Vector3 playerPosition)
     {
-        // Find all colliders within the detection radius using OverlapCircle
+        // Detect all colliders within the obstacle's detection radius
         Collider2D[] collidersInRange = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
 
-        // Iterate through all detected colliders and check if they are enemies
+        // Loop through colliders and check if they belong to enemies
         foreach (var collider in collidersInRange)
         {
-            // Check if the collider belongs to an enemy (assuming enemies are tagged "Enemy")
             if (collider.CompareTag("Enemy"))
             {
-                // Example of triggering some action on each enemy
-                Debug.Log("Enemy detected in range: " + collider.name);
-
-                // Instead of calling ReactToObstacle, we now handle it in a different way
-                // For instance, start chasing the player:
-                collider.GetComponent<EnemyScript>().StartChasing(transform.position);
+                // Command each enemy in range to move to the player's collision position
+                collider.GetComponent<EnemyScript>().MoveToEventPosition(playerPosition);
             }
         }
     }
 
-    // Gizmos to visualize the detection radius in the editor
+    // Draw the detection radius for the obstacle in the editor
     void OnDrawGizmos()
     {
-        // Set the color of the Gizmo
         Gizmos.color = Color.red;
-
-        // Draw a wire sphere at the obstacle's position to represent the detection radius
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }
