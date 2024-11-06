@@ -82,6 +82,7 @@ public class EnemyScript : MonoBehaviour
         {
             Debug.Log("Player detected - Game Over!");
             OnGameOver?.Invoke(); // Trigger game over
+            Destroy(collision.gameObject);
         }
     }
 
