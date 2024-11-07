@@ -5,15 +5,13 @@ public class EnemyScript : MonoBehaviour
     public Transform[] patrolPoints;
     public float patrolSpeed = 2f;
     public float detectionRadius = 5f;
-    public float avoidanceRadius = 1f; // Radius to avoid obstacles
-
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
-    private bool isMovingToEvent = false;
     private Vector3 eventPosition;
     private Rigidbody2D rb;
-    private float waitTime = 2f; // Wait time at event position
-    private bool isWaiting = false;
+    private bool isMovingToEvent = false;
+    private Vector3 previousDirection; // To store the previous movement direction
+    private bool isReturning = false;  // Flag to indicate the enemy is returning
 
     void Start()
     {
@@ -22,6 +20,10 @@ public class EnemyScript : MonoBehaviour
         if (patrolPoints.Length > 0)
             targetPosition = patrolPoints[currentPatrolIndex].position;
 
+        // Start patrol
+        MoveToTarget(targetPosition);
+
+        // Subscribe to the event
         ObstacleCollision.OnPlayerHit += MoveToEventPosition;
     }
 
@@ -29,14 +31,12 @@ public class EnemyScript : MonoBehaviour
     {
         if (isMovingToEvent)
         {
-            if (!isWaiting)
-                MoveTowardsTargetWithAvoidance(eventPosition, patrolSpeed);
-
-            if (Vector3.Distance(transform.position, eventPosition) <= 0.2f && !isWaiting)
-            {
-                isWaiting = true;
-                Invoke(nameof(ReturnToPatrol), waitTime); // Wait before returning to patrol
-            }
+            MoveToTarget(eventPosition);
+        }
+        else if (isReturning)
+        {
+            // Move the enemy in the opposite direction temporarily
+            MoveToTarget(transform.position + previousDirection * -1);
         }
         else
         {
@@ -46,31 +46,23 @@ public class EnemyScript : MonoBehaviour
 
     void Patrol()
     {
+        // If near the patrol point, move to the next one
         if (Vector3.Distance(transform.position, targetPosition) <= 0.2f)
         {
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
             targetPosition = patrolPoints[currentPatrolIndex].position;
+            MoveToTarget(targetPosition);
         }
-
-        MoveTowardsTargetWithAvoidance(targetPosition, patrolSpeed);
     }
 
-    void MoveTowardsTargetWithAvoidance(Vector3 target, float speed)
+    void MoveToTarget(Vector3 target)
     {
+        // Move normally towards the target
         Vector3 direction = (target - transform.position).normalized;
-        Vector3 avoidanceDirection = Vector3.zero;
-        int obstacleLayerMask = LayerMask.GetMask("MapObject");
+        rb.velocity = direction * patrolSpeed;
 
-        Collider2D[] obstacles = Physics2D.OverlapCircleAll(transform.position, avoidanceRadius, obstacleLayerMask);
-        foreach (Collider2D obstacle in obstacles)
-        {
-            Vector3 obstaclePos = new Vector3(obstacle.transform.position.x, obstacle.transform.position.y, 0);
-            Vector3 toObstacle = transform.position - obstaclePos;
-            avoidanceDirection += toObstacle.normalized / toObstacle.sqrMagnitude;
-        }
-
-        Vector3 moveDirection = (direction + avoidanceDirection).normalized;
-        rb.velocity = moveDirection * speed;
+        // Store the direction the enemy is moving in
+        previousDirection = direction;
     }
 
     public void MoveToEventPosition(Vector3 playerPosition)
@@ -79,17 +71,24 @@ public class EnemyScript : MonoBehaviour
         {
             isMovingToEvent = true;
             eventPosition = playerPosition;
-            isWaiting = false; // Reset waiting status
         }
     }
 
-    void ReturnToPatrol()
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        isMovingToEvent = false;
-    }
+        // Check if we hit a "MapObject"
+        if (collision.gameObject.CompareTag("MapObject"))
+        {
+            Debug.Log("Hit MapObject, returning to previous position...");
+            isReturning = true; // Start returning to the direction we came from
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
+            // We reverse the direction to go back
+            MoveToTarget(transform.position + previousDirection * -1); // Move in the opposite direction
+
+            // After some time (optional), stop returning and continue patrol
+            Invoke(nameof(StopReturning), 1f); // 1 second return time
+        }
+
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player detected - Game Over!");
@@ -98,8 +97,14 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    void StopReturning()
+    {
+        isReturning = false; // Stop returning after the specified time
+    }
+
     void OnDestroy()
     {
+        // Unsubscribe from the event when the object is destroyed
         ObstacleCollision.OnPlayerHit -= MoveToEventPosition;
     }
 
@@ -107,7 +112,5 @@ public class EnemyScript : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, avoidanceRadius);
     }
 }
