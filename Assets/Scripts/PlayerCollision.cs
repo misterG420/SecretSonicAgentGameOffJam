@@ -15,7 +15,17 @@ public class PlayerCollision : MonoBehaviour
 #if UNITY_ANDROID
             Handheld.Vibrate(); // Trigger a single short vibration
 #endif
-            lastVibrationTime = Time.time; // Reset cooldown timer
+            lastVibrationTime = Time.time; 
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Document"))
+        {
+            Debug.Log("Player collided with Document and won!");
+
+            GameManager.TriggerVictory();
         }
     }
 }
