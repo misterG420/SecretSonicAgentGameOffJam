@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float resetTime = 2f; // Time to keep objects visible after activation
     private AudioClip microphoneClip;
     public Slider loudnessSlider;
-    public float amplificationFactor = 30f; // Sensitivity control
+    public float amplificationFactor = 35f; // Sensitivity control
     private bool isMapRevealed = false;
     private float revealTimer = 0f;
     private bool isBaselineSet = false;
@@ -59,8 +59,8 @@ public class PlayerController : MonoBehaviour
                 return; // Do nothing until the baseline is set
             }
 
-            // Check if loudness exceeds baseline threshold by 1%
-            if (loudness > baselineLoudness * 1.01f)
+            // Check if loudness exceeds baseline threshold by 0.5%
+            if (loudness > baselineLoudness * 1.005f)
             {
                 RevealMap();
                 revealTimer = resetTime; // Reset the timer to 2 seconds
