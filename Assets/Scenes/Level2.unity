@@ -6234,7 +6234,7 @@ PrefabInstance:
     - target: {fileID: 3014972232716764987, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 3014972232716764987, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_Parameters.textureScale.x
       value: 0.1
@@ -6343,6 +6343,18 @@ PrefabInstance:
       propertyPath: lineWidth
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 5115382949277270480, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+      propertyPath: gunSprites.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5115382949277270480, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+      propertyPath: gunSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 1902218589752714869}
+    - target: {fileID: 5115382949277270480, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+      propertyPath: gunSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 1902218589752714868}
     - target: {fileID: 7758724178906721103, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -6352,6 +6364,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+--- !u!4 &1902218589752714868 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8213461284068024996, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+  m_PrefabInstance: {fileID: 1902218589752714867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1902218589752714869 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6877306472705124261, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+  m_PrefabInstance: {fileID: 1902218589752714867}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6939794775077504751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4273527328001199634, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}

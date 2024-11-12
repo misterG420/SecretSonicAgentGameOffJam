@@ -30,9 +30,9 @@ public class GunObstacle : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the player has collided with the GunObstacle
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Player has collided with the GunObstacle");
             ActivateLineRenderersAndRaycasts(collision.transform);
         }
     }
@@ -41,29 +41,18 @@ public class GunObstacle : MonoBehaviour
     {
         for (int i = 0; i < gunSprites.Length; i++)
         {
-            // Enable and set positions for each line renderer
             lineRenderers[i].enabled = true;
             lineRenderers[i].SetPosition(0, gunSprites[i].position);
             lineRenderers[i].SetPosition(1, playerTransform.position);
 
-            // Perform a raycast from each gun sprite to the player
-            Vector2 direction = (playerTransform.position - gunSprites[i].position).normalized;
-            float distance = Vector2.Distance(gunSprites[i].position, playerTransform.position);
-
-            RaycastHit2D hit = Physics2D.Raycast(gunSprites[i].position, direction, distance, playerLayer);
-
-            // If the raycast hits the player, trigger the game over function
-            if (hit.collider != null && hit.collider.CompareTag("Player"))
-            {
                 GameOver();
-                break; // Only trigger game over once
-            }
+                Debug.Log("Line Renderer hit Player");
         }
     }
 
     private void GameOver()
     {
         GameManager.TriggerGameOver();
-        Debug.Log("Game Over: Player hit by raycast from gun obstacle!");
+        Debug.Log("Game Over() called");
     }
 }
