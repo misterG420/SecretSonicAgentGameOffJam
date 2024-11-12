@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public static event Action OnGameOver;
     public static event Action OnVictory;
 
+    private GameObject player; 
+
     private void OnEnable()
     {
         OnGameOver += ActivateGameOverCanvas;
@@ -25,6 +27,8 @@ public class GameManager : MonoBehaviour
     {
         gameOverCanvas.SetActive(false);
         victoryCanvas.SetActive(false);
+
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public static void TriggerGameOver()
@@ -39,11 +43,21 @@ public class GameManager : MonoBehaviour
 
     private void ActivateGameOverCanvas()
     {
+        if (player != null)
+        {
+            Destroy(player);
+        }
+
         gameOverCanvas.SetActive(true);
     }
 
     private void ActivateVictoryCanvas()
     {
+        if (player != null)
+        {
+            Destroy(player);
+        }
+
         victoryCanvas.SetActive(true);
     }
 }
