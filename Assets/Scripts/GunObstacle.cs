@@ -1,55 +1,69 @@
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
 public class GunObstacle : MonoBehaviour
 {
-    public Transform gun1; // Reference to the first gun child object
-    public Transform gun2; // Reference to the second gun child object
-    public float lineWidth = 0.1f; // Width of the line renderer
-    public float detectionRadius = 5f; // Detection radius (if needed)
+    public Transform[] gunSprites; // Assign gun sprite transforms in the inspector
+    public float lineWidth = 0.1f;
+    public LayerMask playerLayer; // Layer to check for the player in the raycast
 
-    private LineRenderer lineRenderer;
-    private BoxCollider2D lineCollider;
+    private LineRenderer[] lineRenderers;
 
     void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
-        lineRenderer.tag = "Enemy";
-        lineRenderer.enabled = false;
+        // Initialize line renderers based on the number of gun sprites
+        lineRenderers = new LineRenderer[gunSprites.Length];
+        for (int i = 0; i < gunSprites.Length; i++)
+        {
+            GameObject lineObj = new GameObject("LineRenderer" + i);
+            lineObj.transform.parent = transform;
 
-        // Set up the collider to cover the line renderer's path
-        lineCollider = gameObject.AddComponent<BoxCollider2D>();
-        lineCollider.isTrigger = true;
-        lineCollider.enabled = false; // Initially disabled until the player collision
+            LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+            lineRenderer.positionCount = 2;
+            lineRenderer.startWidth = lineWidth;
+            lineRenderer.endWidth = lineWidth;
+            lineRenderer.tag = "Enemy";
+            lineRenderer.enabled = false;
+
+            lineRenderers[i] = lineRenderer;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // Check if the player has collided with the GunObstacle
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Enable and set up the line renderer between guns and player
-            lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, gun1.position);
-            lineRenderer.SetPosition(1, collision.transform.position);
-
-            // Enable and position the collider to match the line renderer
-            Vector2 lineCenter = (gun1.position + collision.transform.position) / 2;
-            float lineLength = Vector2.Distance(gun1.position, collision.transform.position);
-            lineCollider.enabled = true;
-            lineCollider.size = new Vector2(lineLength, lineWidth);
-            lineCollider.offset = transform.InverseTransformPoint(lineCenter);
-            lineCollider.transform.rotation = Quaternion.FromToRotation(Vector3.right, collision.transform.position - gun1.position);
+            ActivateLineRenderersAndRaycasts(collision.transform);
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void ActivateLineRenderersAndRaycasts(Transform playerTransform)
     {
-        if (other.CompareTag("Player"))
+        for (int i = 0; i < gunSprites.Length; i++)
         {
-            Destroy(other.gameObject);
+            // Enable and set positions for each line renderer
+            lineRenderers[i].enabled = true;
+            lineRenderers[i].SetPosition(0, gunSprites[i].position);
+            lineRenderers[i].SetPosition(1, playerTransform.position);
+
+            // Perform a raycast from each gun sprite to the player
+            Vector2 direction = (playerTransform.position - gunSprites[i].position).normalized;
+            float distance = Vector2.Distance(gunSprites[i].position, playerTransform.position);
+
+            RaycastHit2D hit = Physics2D.Raycast(gunSprites[i].position, direction, distance, playerLayer);
+
+            // If the raycast hits the player, trigger the game over function
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
+            {
+                GameOver();
+                break; // Only trigger game over once
+            }
         }
+    }
+
+    private void GameOver()
+    {
+        GameManager.TriggerGameOver();
+        Debug.Log("Game Over: Player hit by raycast from gun obstacle!");
     }
 }
