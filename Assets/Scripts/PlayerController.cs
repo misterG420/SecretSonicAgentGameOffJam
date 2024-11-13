@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +16,10 @@ public class PlayerController : MonoBehaviour
     private bool isBaselineSet = false;
     private float baselineCaptureTime = 2f; // Time to capture baseline loudness
     private float baselineTimer = 0f;
+
+    public float revealRadius = 3f; // Radius within which map objects are revealed
+    public float revealSpeed = 0.05f; // Speed of reveal wave
+    public float revealDelay = 0.1f; // Delay between revealing each layer
 
     void Start()
     {
@@ -45,7 +51,6 @@ public class PlayerController : MonoBehaviour
             float loudness = GetNormalizedLoudness(data);
             UpdateLoudnessSlider(loudness);
 
-            // Capture baseline loudness during the initial period
             if (!isBaselineSet)
             {
                 baselineTimer += Time.deltaTime;
@@ -59,10 +64,9 @@ public class PlayerController : MonoBehaviour
                 return; // Do nothing until the baseline is set
             }
 
-            // Check if loudness exceeds baseline threshold by 0.5%
             if (loudness > baselineLoudness * 1.005f)
             {
-                RevealMap();
+                StartCoroutine(RevealMapWave());
                 revealTimer = resetTime; // Reset the timer to 2 seconds
             }
 
@@ -93,26 +97,47 @@ public class PlayerController : MonoBehaviour
         loudnessSlider.value = loudness;
     }
 
-    private void RevealMap()
+    private IEnumerator RevealMapWave()
     {
-        if (!isMapRevealed)
+        Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, revealRadius);
+
+        // Sort objects by distance to create a wave effect
+        List<Collider2D> sortedObjects = new List<Collider2D>(objectsInRange);
+        sortedObjects.Sort((a, b) =>
+            Vector2.Distance(transform.position, a.transform.position)
+            .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
+
+        // Reveal each object with a slight delay based on distance
+        foreach (Collider2D col in sortedObjects)
         {
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
+            if (col.CompareTag("MapObject"))
             {
-                SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
+                SpriteRenderer renderer = col.GetComponent<SpriteRenderer>();
                 if (renderer != null)
                 {
-                    Color color = renderer.color;
-                    color.a = 1; // Set alpha to 1 to make the object visible
-                    renderer.color = color;
+                    StartCoroutine(FadeInObject(renderer));
                 }
             }
-            isMapRevealed = true;
+            yield return new WaitForSeconds(revealDelay);
+        }
+
+        isMapRevealed = true;
+    }
+
+    private IEnumerator FadeInObject(SpriteRenderer renderer)
+    {
+        Color color = renderer.color;
+        while (color.a < 1f)
+        {
+            color.a += revealSpeed * Time.deltaTime;
+            renderer.color = color;
+            yield return null;
         }
     }
 
     private void ResetMap()
     {
+        StopAllCoroutines(); // Stop any ongoing reveal coroutines
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
         {
             SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
@@ -138,5 +163,11 @@ public class PlayerController : MonoBehaviour
                 renderer.color = color;
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, revealRadius);
     }
 }
