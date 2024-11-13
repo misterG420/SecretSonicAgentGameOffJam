@@ -17,9 +17,9 @@ public class PlayerController : MonoBehaviour
     private float baselineCaptureTime = 2f; // Time to capture baseline loudness
     private float baselineTimer = 0f;
 
-    public float revealRadius = 3f; // Radius within which map objects are revealed
-    public float revealSpeed = 0.05f; // Speed of reveal wave
-    public float revealDelay = 0.1f; // Delay between revealing each layer
+    private float revealRadius = 2f; // Radius within which map objects are revealed
+    private float revealSpeed = 1.6f; // Speed of reveal wave
+    private float revealDelay = 0.04f; // Delay between revealing each layer
 
     void Start()
     {

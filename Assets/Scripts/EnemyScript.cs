@@ -5,6 +5,8 @@ public class EnemyScript : MonoBehaviour
     public Transform[] patrolPoints;
     public float patrolSpeed = 2f;
     public float detectionRadius = 5f;
+    public GameObject alertIcon; // GameObject to show when not patrolling
+
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
     private Vector3 eventPosition;
@@ -12,16 +14,22 @@ public class EnemyScript : MonoBehaviour
     private bool isMovingToEvent = false;
     private Vector3 previousDirection; // To store the previous movement direction
     private bool isReturning = false;  // Flag to indicate the enemy is returning
+    private Transform player; // Reference to the player
+    private bool isShowingAlert = false; // Flag to track if alert icon is being shown
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player by tag
 
         if (patrolPoints.Length > 0)
             targetPosition = patrolPoints[currentPatrolIndex].position;
 
         // Start patrol
         MoveToTarget(targetPosition);
+
+        // Hide alert icon initially
+        alertIcon.SetActive(false);
 
         // Subscribe to the event
         ObstacleCollision.OnPlayerHit += MoveToEventPosition;
@@ -31,7 +39,14 @@ public class EnemyScript : MonoBehaviour
     {
         if (isMovingToEvent)
         {
+            ShowAlert();
             MoveToTarget(eventPosition);
+        }
+        else if (Vector3.Distance(transform.position, player.position) <= detectionRadius)
+        {
+            // Move toward the player if within detection radius
+            ShowAlert();
+            MoveToTarget(player.position);
         }
         else if (isReturning)
         {
@@ -72,6 +87,22 @@ public class EnemyScript : MonoBehaviour
             isMovingToEvent = true;
             eventPosition = playerPosition;
         }
+    }
+
+    void ShowAlert()
+    {
+        if (!isShowingAlert)
+        {
+            isShowingAlert = true;
+            alertIcon.SetActive(true);
+            Invoke(nameof(HideAlert), 2f); // Hide after 2 seconds
+        }
+    }
+
+    void HideAlert()
+    {
+        alertIcon.SetActive(false);
+        isShowingAlert = false;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
