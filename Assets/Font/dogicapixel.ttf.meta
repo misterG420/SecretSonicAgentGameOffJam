@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5cae6d82f7b93034c8a0480ba4b74218
+guid: 1c2d7d484819db44f982af306dd4002c
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - I pixel u
+  - Dogica Pixel
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
