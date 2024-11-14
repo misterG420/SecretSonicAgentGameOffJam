@@ -5,28 +5,36 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-    private float baselineLoudness = 0f;
-    private float silenceDuration = 0f;
-    public float resetTime = 2f; // Time to keep objects visible after activation
-    private AudioClip microphoneClip;
+    private float baselineLoudness;
     public Slider loudnessSlider;
-    public float amplificationFactor = 35f; // Sensitivity control
-    private bool isMapRevealed = false;
+    public float amplificationFactor = 35f;
     private float revealTimer = 0f;
-    private bool isBaselineSet = false;
-    private float baselineCaptureTime = 2f; // Time to capture baseline loudness
-    private float baselineTimer = 0f;
+    public float resetTime = 2f;
 
-    private float revealRadius = 2f; // Radius within which map objects are revealed
-    private float revealSpeed = 1.6f; // Speed of reveal wave
-    private float revealDelay = 0.04f; // Delay between revealing each layer
-
+    private AudioClip microphoneClip;
     private Coroutine revealWaveCoroutine = null;
+    private bool isMapRevealed = false;
+
+    private float revealRadius = 2f;
+    private float revealSpeed = 1.6f;
+    private float revealDelay = 0.04f;
 
     void Start()
     {
+        LoadBaseline();
         StartMicrophone();
-        ResetState();
+    }
+
+    private void LoadBaseline()
+    {
+        if (PlayerPrefs.HasKey("BaselineLoudness"))
+        {
+            baselineLoudness = PlayerPrefs.GetFloat("BaselineLoudness");
+        }
+        else
+        {
+            Debug.LogError("Baseline not calibrated! Please run the calibration scene first.");
+        }
     }
 
     private void StartMicrophone()
@@ -38,53 +46,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Update()
+    void Update()
     {
         DetectSound();
     }
 
     private void DetectSound()
     {
+        if (!Microphone.IsRecording(null)) StartMicrophone();
+
         float[] data = new float[256];
-        int position = Microphone.GetPosition(Microphone.devices[0]);
+        microphoneClip.GetData(data, 0);
+        float loudness = GetNormalizedLoudness(data);
+        loudnessSlider.value = loudness;
 
-        if (position > 0)
+        if (loudness > baselineLoudness * 1.005f)
         {
-            microphoneClip.GetData(data, 0);
-            float loudness = GetNormalizedLoudness(data);
-            UpdateLoudnessSlider(loudness);
-
-            if (!isBaselineSet)
+            if (revealWaveCoroutine != null)
             {
-                baselineTimer += Time.deltaTime;
+                StopCoroutine(revealWaveCoroutine);
+            }
+            revealWaveCoroutine = StartCoroutine(RevealMapWave());
+            revealTimer = resetTime;
+        }
 
-                baselineLoudness += loudness; // Sum loudness for averaging
-                if (baselineTimer >= baselineCaptureTime)
-                {
-                    baselineLoudness /= baselineCaptureTime; // Calculate average loudness
-                    isBaselineSet = true;
-                }
-                return; // Do nothing until the baseline is set
-            }
-
-            if (loudness > baselineLoudness * 1.005f)
-            {
-                if (revealWaveCoroutine != null)
-                {
-                    StopCoroutine(revealWaveCoroutine);
-                }
-                revealWaveCoroutine = StartCoroutine(RevealMapWave());
-                revealTimer = resetTime; // Reset the timer to 2 seconds
-            }
-
-            if (revealTimer > 0)
-            {
-                revealTimer -= Time.deltaTime;
-            }
-            else if (isMapRevealed)
-            {
-                ResetMap();
-            }
+        if (revealTimer > 0)
+        {
+            revealTimer -= Time.deltaTime;
+        }
+        else if (isMapRevealed)
+        {
+            ResetMap();
         }
     }
 
@@ -95,26 +87,16 @@ public class PlayerController : MonoBehaviour
         {
             sum += Mathf.Abs(data[i]);
         }
-        float avgLoudness = sum / data.Length;
-        return avgLoudness * amplificationFactor;
-    }
-
-    private void UpdateLoudnessSlider(float loudness)
-    {
-        loudnessSlider.value = loudness;
+        return sum / data.Length * amplificationFactor;
     }
 
     private IEnumerator RevealMapWave()
     {
         Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, revealRadius);
-
-        // Sort objects by distance to create a wave effect
         List<Collider2D> sortedObjects = new List<Collider2D>(objectsInRange);
-        sortedObjects.Sort((a, b) =>
-            Vector2.Distance(transform.position, a.transform.position)
-            .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
+        sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
+                                     .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
 
-        // Reveal each object with a slight delay based on distance
         foreach (Collider2D col in sortedObjects)
         {
             if (col.CompareTag("MapObject"))
@@ -127,7 +109,6 @@ public class PlayerController : MonoBehaviour
             }
             yield return new WaitForSeconds(revealDelay);
         }
-
         isMapRevealed = true;
     }
 
@@ -155,40 +136,10 @@ public class PlayerController : MonoBehaviour
             if (renderer != null)
             {
                 Color color = renderer.color;
-                color.a = 0; // Set alpha to 0 to make the object invisible
+                color.a = 0;
                 renderer.color = color;
             }
         }
         isMapRevealed = false;
-    }
-
-    private void ResetState()
-    {
-        isMapRevealed = false;
-        isBaselineSet = false;
-        baselineLoudness = 0f;
-        baselineTimer = 0f;
-        revealTimer = 0f;
-        SetMapObjectsAlpha(0); // Hide map objects initially
-    }
-
-    private void SetMapObjectsAlpha(float alpha)
-    {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
-        {
-            SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
-            if (renderer != null)
-            {
-                Color color = renderer.color;
-                color.a = alpha; // Set the alpha to the specified value
-                renderer.color = color;
-            }
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, revealRadius);
     }
 }

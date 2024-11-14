@@ -15,7 +15,12 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene("IntroMenu");
     }
 
-  
+    public void LoadPreLevelInstructions()
+    {
+        SceneManager.LoadScene("PreLevelInstructions");
+    }
+
+
     public void LoadLevel1()
     {
         SceneManager.LoadScene("Level1");
