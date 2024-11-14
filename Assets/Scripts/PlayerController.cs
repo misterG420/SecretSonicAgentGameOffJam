@@ -21,25 +21,13 @@ public class PlayerController : MonoBehaviour
     private float revealSpeed = 1.6f; // Speed of reveal wave
     private float revealDelay = 0.04f; // Delay between revealing each layer
 
-
+    private Coroutine revealWaveCoroutine = null;
 
     void Start()
     {
         StartMicrophone();
         ResetState();
     }
-
-
-    private void ResetState()
-    {
-        isMapRevealed = false;
-        isBaselineSet = false;
-        baselineLoudness = 0f;
-        baselineTimer = 0f;
-        revealTimer = 0f;
-        SetMapObjectsAlpha(0); // Hide map objects initially
-    }
-
 
     private void StartMicrophone()
     {
@@ -49,7 +37,6 @@ public class PlayerController : MonoBehaviour
             microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
         }
     }
-
 
     private void Update()
     {
@@ -82,7 +69,11 @@ public class PlayerController : MonoBehaviour
 
             if (loudness > baselineLoudness * 1.005f)
             {
-                StartCoroutine(RevealMapWave());
+                if (revealWaveCoroutine != null)
+                {
+                    StopCoroutine(revealWaveCoroutine);
+                }
+                revealWaveCoroutine = StartCoroutine(RevealMapWave());
                 revealTimer = resetTime; // Reset the timer to 2 seconds
             }
 
@@ -153,7 +144,11 @@ public class PlayerController : MonoBehaviour
 
     private void ResetMap()
     {
-        StopAllCoroutines(); // Stop any ongoing reveal coroutines
+        if (revealWaveCoroutine != null)
+        {
+            StopCoroutine(revealWaveCoroutine);
+            revealWaveCoroutine = null;
+        }
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MapObject"))
         {
             SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
@@ -165,6 +160,16 @@ public class PlayerController : MonoBehaviour
             }
         }
         isMapRevealed = false;
+    }
+
+    private void ResetState()
+    {
+        isMapRevealed = false;
+        isBaselineSet = false;
+        baselineLoudness = 0f;
+        baselineTimer = 0f;
+        revealTimer = 0f;
+        SetMapObjectsAlpha(0); // Hide map objects initially
     }
 
     private void SetMapObjectsAlpha(float alpha)
