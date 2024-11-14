@@ -32,6 +32,11 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene("Level2");
     }
 
+    public void LoadLevel3()
+    {
+        SceneManager.LoadScene("Level3" +
+            "");
+    }
 
     public void QuitApplication()
     {

@@ -30,7 +30,7 @@ public class DialogueSystem : MonoBehaviour
         yield return ShowDialogue("Operative", "What's the sitation Agent?");
         yield return new WaitForSeconds(dialogueDelay);
 
-        yield return ShowDialogue("Player", "Nightvision is broken, I can only use Special Sonar to reveal the enemy compount");
+        yield return ShowDialogue("Player", "Night vision is broken, I can only use Special Sonar to reveal the enemy compount");
         yield return new WaitForSeconds(dialogueDelay);
         
         yield return ShowDialogue("Operative", "Careful, if you are too loud you may attract enemies!");

@@ -31,7 +31,7 @@ public class GunObstacle : MonoBehaviour
                 lineRenderer.endColor = color;
             }
 
-            // Optionally, set the material to ensure it's using the correct shader
+
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
 
             lineRenderers[i] = lineRenderer;
@@ -54,17 +54,15 @@ public class GunObstacle : MonoBehaviour
             lineRenderers[i].SetPosition(0, gunSprites[i].position);
             lineRenderers[i].SetPosition(1, playerTransform.position);
 
-            // Start the Coroutine to delay the game over
+
             StartCoroutine(WaitForGameOver(0.5f));
         }
     }
 
     private IEnumerator WaitForGameOver(float delay)
     {
-        // Wait for the specified time before calling GameOver
         yield return new WaitForSeconds(delay);
 
-        // After the delay, trigger the game over
         GameOver();
     }
 

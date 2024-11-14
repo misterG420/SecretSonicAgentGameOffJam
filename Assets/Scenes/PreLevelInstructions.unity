@@ -1226,7 +1226,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: a
+  m_Text: Press button to access microphone for recording
 --- !u!222 &2047481817
 CanvasRenderer:
   m_ObjectHideFlags: 0
