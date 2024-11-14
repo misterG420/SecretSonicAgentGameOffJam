@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private bool isMapRevealed = false;
 
     private float revealRadius = 2f;
-    private float revealSpeed = 1.6f;
+    private float revealSpeed = 2.6f;
     private float revealDelay = 0.04f;
 
     void Start()
