@@ -34,9 +34,14 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void LoadLevel3()
     {
-        SceneManager.LoadScene("Level3" +
-            "");
+        SceneManager.LoadScene("Level3");
     }
+
+    public void LoadLevel4()
+    {
+        SceneManager.LoadScene("Level4");
+    }
+
 
     public void QuitApplication()
     {
