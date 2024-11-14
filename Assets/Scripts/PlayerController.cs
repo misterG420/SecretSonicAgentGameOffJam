@@ -21,19 +21,35 @@ public class PlayerController : MonoBehaviour
     private float revealSpeed = 1.6f; // Speed of reveal wave
     private float revealDelay = 0.04f; // Delay between revealing each layer
 
+
+
     void Start()
     {
         StartMicrophone();
-        SetMapObjectsAlpha(0); // Set all map objects to alpha 0 by default
+        ResetState();
     }
+
+
+    private void ResetState()
+    {
+        isMapRevealed = false;
+        isBaselineSet = false;
+        baselineLoudness = 0f;
+        baselineTimer = 0f;
+        revealTimer = 0f;
+        SetMapObjectsAlpha(0); // Hide map objects initially
+    }
+
 
     private void StartMicrophone()
     {
         if (Microphone.devices.Length > 0)
         {
+            Microphone.End(null); // Stop any existing microphone instance
             microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
         }
     }
+
 
     private void Update()
     {

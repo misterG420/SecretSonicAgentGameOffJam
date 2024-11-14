@@ -13,7 +13,7 @@ public class DialogueSystem : MonoBehaviour
     public Text operativeText;
 
     private float letterDelay = 0.05f; // Delay between each letter
-    private float dialogueDelay = 4f;  // Delay between each dialogue line
+    private float dialogueDelay = 3f;  // Delay between each dialogue line
 
     private Coroutine currentCoroutine;
 
