@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BaselineCalibration : MonoBehaviour
 {
     public Button calibrateButton;
+    public GameObject startGameButton; // The button to activate after calibration
     public float captureTime = 2f; // Time in seconds to capture baseline loudness
     private AudioClip microphoneClip;
     private float baselineLoudness = 0f;
@@ -21,6 +22,16 @@ public class BaselineCalibration : MonoBehaviour
         else
         {
             Debug.LogError("Calibrate Button not assigned.");
+        }
+
+        // Ensure startGameButton is initially inactive
+        if (startGameButton != null)
+        {
+            startGameButton.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Start Game Button not assigned.");
         }
     }
 
@@ -45,7 +56,7 @@ public class BaselineCalibration : MonoBehaviour
         }
         else
         {
-            statusText.text = "No microphone found!";
+            statusText.text = "No microphone found! Unable to play";
         }
     }
 
@@ -64,6 +75,12 @@ public class BaselineCalibration : MonoBehaviour
             PlayerPrefs.SetFloat("BaselineLoudness", baselineLoudness);
             isCalibrating = false;
             statusText.text = "Baseline calibration complete. Ready to start the game.";
+
+            // Activate the start game button once calibration is complete
+            if (startGameButton != null)
+            {
+                startGameButton.SetActive(true);
+            }
         }
     }
 

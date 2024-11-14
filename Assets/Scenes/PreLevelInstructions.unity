@@ -614,6 +614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   calibrateButton: {fileID: 1518494295}
+  startGameButton: {fileID: 159571490}
   captureTime: 2
   statusText: {fileID: 2047481816}
 --- !u!4 &812815598
