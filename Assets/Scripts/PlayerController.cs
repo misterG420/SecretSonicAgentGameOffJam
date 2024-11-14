@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        ResetMap();
         LoadBaseline();
         StartMicrophone();
     }
