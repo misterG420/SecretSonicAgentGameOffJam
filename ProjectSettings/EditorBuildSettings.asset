@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/PreLevelInstructions.unity
     guid: 4acf1d706fb521b4190c74e027b3b611
   - enabled: 1
+    path: Assets/Scenes/CheatCodeUnlockLevel.unity
+    guid: 153ae39506a29584188df8ce3223cbad
+  - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
