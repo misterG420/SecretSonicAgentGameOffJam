@@ -5,8 +5,10 @@ public class SoundPatternDetector : MonoBehaviour
 {
     public Image[] loudnessSquares;  // The squares to represent target loudness levels
     public float[] predefinedPattern;  // Predefined target loudness levels for each square (0-1 range, or any scale)
-    public Text feedbackText;  // UI Text to show feedback on loudness levels
-    public Slider loudnessSlider;  // UI Slider to show the current loudness level
+    public Text feedbackText;  
+    public Slider loudnessSlider;
+
+    public Button cheatButton;
 
     private int currentStep = 0;  // The index of the current square to be activated
     private AudioClip microphoneClip;  // Microphone clip to capture the sound
@@ -26,8 +28,16 @@ public class SoundPatternDetector : MonoBehaviour
 
     void Start()
     {
-        // Start calibration when game starts or via a button press
         StartCalibration();
+
+        if (cheatButton != null)
+        {
+            cheatButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Cheat Button not assigned.");
+        }
     }
 
     void Update()
@@ -77,7 +87,6 @@ public class SoundPatternDetector : MonoBehaviour
             isCalibrating = false;
             feedbackText.text = "Baseline calibration complete. Ready to start detecting loudness.";
 
-            // You can optionally activate a "Start Game" button or proceed with the next steps.
         }
     }
 
@@ -95,7 +104,7 @@ public class SoundPatternDetector : MonoBehaviour
             loudness = Mathf.Lerp(lastLoudness, loudness, smoothingFactor);
             lastLoudness = loudness;
 
-            loudness *= amplificationFactor;  // Adjust based on amplification factor
+            loudness *= amplificationFactor;  
 
             // Check if loudness is above baseline and threshold
             if (loudness > baselineLoudness + thresholdLoudness)
@@ -120,11 +129,14 @@ public class SoundPatternDetector : MonoBehaviour
                     else
                     {
                         currentSquare.color = Color.white;  // Perfect loudness
-                        feedbackText.text = "Perfect!";
+                        feedbackText.text = "Perfect level - 1 unlocked!";
                         currentSquare.gameObject.SetActive(false);  // Hide the square once matched
                         currentStep++;  // Move to the next target square
                     }
-
+                    if (currentStep >= loudnessSquares.Length)
+                    {
+                        UnlockCheat();
+                    }
                     sustainedTime = 0f;  // Reset sustained time
                 }
             }
@@ -133,6 +145,20 @@ public class SoundPatternDetector : MonoBehaviour
                 sustainedTime = 0f;
                 loudnessSlider.value = Mathf.Lerp(loudnessSlider.value, 0f, 0.1f);  // Slowly decrease slider
             }
+        }
+    }
+
+    private void UnlockCheat()
+    {
+        // Enable the cheat button after the pattern is completed
+        if (cheatButton != null)
+        {
+            cheatButton.gameObject.SetActive(true);
+            feedbackText.text = "Cheat unlocked! Press the button to activate cheat.";
+        }
+        else
+        {
+            Debug.LogError("Cheat Button not assigned.");
         }
     }
 
