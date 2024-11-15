@@ -5,10 +5,13 @@ public class SoundPatternDetector : MonoBehaviour
 {
     public Image[] loudnessSquares;  // The squares to represent target loudness levels
     public float[] predefinedPattern;  // Predefined target loudness levels for each square (0-1 range, or any scale)
+    public Text feedbackText;  
+
     private int currentStep = 0;  // The index of the current square to be activated
 
     private AudioClip microphoneClip;  // Microphone clip to capture the sound
     private int sampleRate = 44100;  // Sample rate for the microphone input
+    public float amplificationFactor = 35f;  // Amplification factor to make the loudness more sensitive
 
     private void Start()
     {
@@ -31,18 +34,24 @@ public class SoundPatternDetector : MonoBehaviour
             // Get microphone data and calculate the loudness (average of samples)
             float loudness = GetMicrophoneLoudness();
 
+            // Adjust the loudness based on the amplification factor
+            loudness *= amplificationFactor;
+
             // Check if the current loudness matches the target loudness
             if (loudness < targetLoudness)
             {
                 currentSquare.color = Color.green;  // Input loudness is lower than target (green)
+                feedbackText.text = "Too quiet!";  
             }
             else if (loudness > targetLoudness)
             {
                 currentSquare.color = Color.red;  // Input loudness is higher than target (red)
+                feedbackText.text = "Too loud!";  
             }
             else
             {
                 currentSquare.color = Color.white;  // Exact match (white)
+                feedbackText.text = "Perfect - 1 complted!";  
 
                 // If the loudness matches the target, move to the next square
                 currentSquare.gameObject.SetActive(false);  // Hide the square when it's matched

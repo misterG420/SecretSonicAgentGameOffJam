@@ -20,6 +20,11 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene("PreLevelInstructions");
     }
 
+    public void LoadCheatScreen()
+    {
+        SceneManager.LoadScene("CheatCodeUnlockLevel");
+    }
+
 
     public void LoadLevel1()
     {
