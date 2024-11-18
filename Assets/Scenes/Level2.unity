@@ -533,6 +533,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6045935987055845881, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
+      propertyPath: loudnessSlider
+      value: 
+      objectReference: {fileID: 4403374631000137145}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1716,6 +1720,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94855a73d256bc24890b79b019c10e77, type: 3}
+--- !u!114 &4403374631000137145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8717066878844494920, guid: 94855a73d256bc24890b79b019c10e77, type: 3}
+  m_PrefabInstance: {fileID: 4403374631000137144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4969722246509366313
 GameObject:
   m_ObjectHideFlags: 0
