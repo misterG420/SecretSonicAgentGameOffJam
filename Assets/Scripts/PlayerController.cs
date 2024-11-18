@@ -38,19 +38,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void StartMicrophone()
+    private void StartMicrophone()
     {
         if (Microphone.devices.Length > 0)
         {
             Microphone.End(null); // Stop any existing microphone instance
-            microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
-            Debug.Log($"Microphone started on: {Application.platform}");
+            int minFreq, maxFreq;
+            Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
+
+            int sampleRate = 44100;
+            if (maxFreq > 0) sampleRate = Mathf.Clamp(44100, minFreq, maxFreq);
+
+            Debug.Log($"Using sample rate: {sampleRate}, MinFreq: {minFreq}, MaxFreq: {maxFreq}");
+            microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, sampleRate);
         }
         else
         {
-            Debug.LogError("No microphone found!");
+            Debug.LogError("No microphone detected on this device.");
         }
     }
+
 
 
     void Update()

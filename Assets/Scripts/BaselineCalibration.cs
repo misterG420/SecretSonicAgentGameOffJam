@@ -48,16 +48,28 @@ public class BaselineCalibration : MonoBehaviour
         if (Microphone.devices.Length > 0)
         {
             Microphone.End(null); // Stop any existing microphone instance
-            microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
+
+            // Determine microphone capabilities
+            int minFreq, maxFreq;
+            Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
+
+            // Use 44100 as default, but clamp within microphone-supported range
+            int sampleRate = 44100;
+            if (maxFreq > 0) sampleRate = Mathf.Clamp(sampleRate, minFreq, maxFreq);
+
+            Debug.Log($"Using sample rate: {sampleRate} (Min: {minFreq}, Max: {maxFreq}) on platform: {Application.platform}");
+
+            microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, sampleRate);
+
             captureTimer = 0f;
             baselineLoudness = 0f;
             isCalibrating = true;
             statusText.text = "Calibrating baseline... Please stay silent.";
-            Debug.Log($"Microphone started on: {Application.platform}");
         }
         else
         {
             statusText.text = "No microphone found! Unable to play";
+            Debug.LogError("No microphone devices detected.");
         }
     }
 
