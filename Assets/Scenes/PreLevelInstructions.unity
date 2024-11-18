@@ -203,7 +203,6 @@ GameObject:
   - component: {fileID: 159571493}
   - component: {fileID: 159571492}
   - component: {fileID: 159571495}
-  - component: {fileID: 159571496}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -335,18 +334,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1bc05c7a08c8ec418e9544931d82ac4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &159571496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 159571490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cd7d58fa60b79f469ef5a8f2ea86970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &166017260
@@ -737,7 +724,6 @@ GameObject:
   - component: {fileID: 851528798}
   - component: {fileID: 851528797}
   - component: {fileID: 851528796}
-  - component: {fileID: 851528800}
   m_Layer: 5
   m_Name: CheatButton
   m_TagString: Untagged
@@ -871,18 +857,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851528794}
   m_CullTransparentMesh: 1
---- !u!114 &851528800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851528794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cd7d58fa60b79f469ef5a8f2ea86970, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1114938613
 GameObject:
   m_ObjectHideFlags: 0
