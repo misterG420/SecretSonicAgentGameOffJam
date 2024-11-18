@@ -2,31 +2,45 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public Transform[] patrolPoints;
     public float patrolSpeed = 2f;
     public float detectionRadius = 5f;
-    public GameObject alertIcon; // GameObject to show when not patrolling
+    public GameObject alertIcon; 
 
+    private Transform[] patrolPoints;
     private int currentPatrolIndex = 0;
     private Vector3 targetPosition;
     private Vector3 eventPosition;
     private Rigidbody2D rb;
     private bool isMovingToEvent = false;
-    private Vector3 previousDirection; // To store the previous movement direction
-    private bool isReturning = false;  // Flag to indicate the enemy is returning
-    private Transform player; // Reference to the player
-    private bool isShowingAlert = false; // Flag to track if alert icon is being shown
+    private Vector3 previousDirection; 
+    private bool isReturning = false;  
+    private Transform player; 
+    private bool isShowingAlert = false; 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player by tag
+        player = GameObject.FindGameObjectWithTag("Player")?.transform; // Find the player by tag (optional)
 
-        if (patrolPoints.Length > 0)
+        // Find patrol points
+        Transform p1 = GameObject.Find("P1")?.transform;
+        Transform p2 = GameObject.Find("P2")?.transform;
+
+        if (p1 != null && p2 != null)
+        {
+            patrolPoints = new Transform[] { p1, p2 };
             targetPosition = patrolPoints[currentPatrolIndex].position;
+        }
+        else
+        {
+            Debug.LogWarning("EnemyScript: P1 and/or P2 not found in the scene!");
+        }
 
-        // Start patrol
-        MoveToTarget(targetPosition);
+        // Start patrol if patrol points are valid
+        if (patrolPoints != null && patrolPoints.Length > 0)
+        {
+            MoveToTarget(targetPosition);
+        }
 
         // Hide alert icon initially
         alertIcon.SetActive(false);
@@ -116,7 +130,7 @@ public class EnemyScript : MonoBehaviour
             // We reverse the direction to go back
             MoveToTarget(transform.position + previousDirection * -1); // Move in the opposite direction
 
-            // After some time (optional), stop returning and continue patrol
+            // stop returning and continue patrol
             Invoke(nameof(StopReturning), 1f); // 1 second return time
         }
 
@@ -135,7 +149,6 @@ public class EnemyScript : MonoBehaviour
 
     void OnDestroy()
     {
-        // Unsubscribe from the event when the object is destroyed
         ObstacleCollision.OnPlayerHit -= MoveToEventPosition;
     }
 

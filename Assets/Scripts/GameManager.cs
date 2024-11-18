@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public static event Action OnGameOver;
     public static event Action OnVictory;
 
-    private GameObject player; 
+    private GameObject player;
+    private CircleCollider2D playerCollider;
 
     private void OnEnable()
     {
@@ -29,6 +30,17 @@ public class GameManager : MonoBehaviour
         victoryCanvas.SetActive(false);
 
         player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            playerCollider = player.GetComponent<CircleCollider2D>();
+
+            if (playerCollider == null)
+            {
+                playerCollider = player.AddComponent<CircleCollider2D>();
+            }
+            playerCollider.radius = 0.22f;
+        }
     }
 
     public static void TriggerGameOver()
@@ -53,9 +65,9 @@ public class GameManager : MonoBehaviour
 
     private void ActivateVictoryCanvas()
     {
-        if (player != null)
+        if (player != null && playerCollider != null)
         {
-            Destroy(player);
+            Destroy(playerCollider); // Remove the CircleCollider2D
         }
 
         victoryCanvas.SetActive(true);
