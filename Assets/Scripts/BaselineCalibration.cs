@@ -53,6 +53,7 @@ public class BaselineCalibration : MonoBehaviour
             baselineLoudness = 0f;
             isCalibrating = true;
             statusText.text = "Calibrating baseline... Please stay silent.";
+            Debug.Log($"Microphone started on: {Application.platform}");
         }
         else
         {

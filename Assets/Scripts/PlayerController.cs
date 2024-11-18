@@ -38,14 +38,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void StartMicrophone()
+    void StartMicrophone()
     {
         if (Microphone.devices.Length > 0)
         {
             Microphone.End(null); // Stop any existing microphone instance
             microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, 44100);
+            Debug.Log($"Microphone started on: {Application.platform}");
+        }
+        else
+        {
+            Debug.LogError("No microphone found!");
         }
     }
+
 
     void Update()
     {
@@ -61,8 +67,13 @@ public class PlayerController : MonoBehaviour
         float loudness = GetNormalizedLoudness(data);
         loudnessSlider.value = loudness;
 
+        Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
+
         if (loudness > baselineLoudness * 1.005f)
         {
+
+            Debug.Log("Loudness threshold exceeded!");
+
             if (revealWaveCoroutine != null)
             {
                 StopCoroutine(revealWaveCoroutine);
@@ -94,8 +105,11 @@ public class PlayerController : MonoBehaviour
     private IEnumerator RevealMapWave()
     {
         Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, revealRadius);
+
+        Debug.Log($"Objects in range: {objectsInRange.Length}");
+
         List<Collider2D> sortedObjects = new List<Collider2D>(objectsInRange);
-        sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
+                sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
                                      .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
 
         foreach (Collider2D col in sortedObjects)

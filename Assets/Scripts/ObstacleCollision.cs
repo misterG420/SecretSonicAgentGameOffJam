@@ -40,10 +40,5 @@ public class ObstacleCollision : MonoBehaviour
         }
     }
 
-    // Draw the detection radius for the obstacle in the editor
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }
+    
 }
