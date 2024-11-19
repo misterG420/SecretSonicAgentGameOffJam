@@ -8,6 +8,8 @@ public class PlayerDragMovement : MonoBehaviour
     private Vector2 targetPosition;
     private bool isDragging = false;
 
+    public Animator playerAnimator; // Reference to the player's Animator
+
     void Update()
     {
         // Handle input (touch or mouse)
@@ -15,6 +17,16 @@ public class PlayerDragMovement : MonoBehaviour
 
         // Move and rotate the player towards the target position
         MovePlayer();
+
+        // Trigger move animation if player is dragging
+        if (isDragging)
+        {
+            if (!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Moving")) // Ensure "Moving" isn't already triggered
+            {
+                playerAnimator.SetTrigger("Move"); // Trigger the move animation
+                Debug.Log("Move animation should play!");
+            }
+        }
     }
 
     void HandleInput()

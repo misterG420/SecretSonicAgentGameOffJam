@@ -19,11 +19,19 @@ public class PlayerController : MonoBehaviour
     private float revealSpeed = 2.6f;
     private float revealDelay = 0.04f;
 
+    public Animator playerAnimator; // Reference to the player's Animator
+    public float shoutThreshold = 1.2f; // Loudness threshold for the shout animation
+
     void Start()
     {
         ResetMap();
         LoadBaseline();
         StartMicrophone();
+
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponent<Animator>(); // Get the Animator component if not set
+        }
     }
 
     private void LoadBaseline()
@@ -58,8 +66,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     void Update()
     {
         DetectSound();
@@ -76,9 +82,17 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
 
+        if (loudness > baselineLoudness * shoutThreshold)
+        {
+            if (!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Shouting")) // Check if already shouting
+            {
+                playerAnimator.SetTrigger("Shout");
+                Debug.Log("Shout animation should play!");
+            }
+        }
+
         if (loudness > baselineLoudness * 1.005f)
         {
-
             Debug.Log("Loudness threshold exceeded!");
 
             if (revealWaveCoroutine != null)
@@ -116,8 +130,8 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"Objects in range: {objectsInRange.Length}");
 
         List<Collider2D> sortedObjects = new List<Collider2D>(objectsInRange);
-                sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
-                                     .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
+        sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
+                             .CompareTo(Vector2.Distance(transform.position, b.transform.position)));
 
         foreach (Collider2D col in sortedObjects)
         {

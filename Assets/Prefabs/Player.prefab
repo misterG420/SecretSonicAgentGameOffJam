@@ -52,6 +52,8 @@ MonoBehaviour:
   loudnessSlider: {fileID: 0}
   amplificationFactor: 35
   resetTime: 2
+  playerAnimator: {fileID: 8672728396507457240}
+  shoutThreshold: 0.7
 --- !u!114 &5624023328699643002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   rotationSpeed: 2
+  playerAnimator: {fileID: 8672728396507457240}
 --- !u!114 &7204727181672012188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8901303060503212625}
   - component: {fileID: 8310218969355542528}
+  - component: {fileID: 8672728396507457240}
   m_Layer: 0
   m_Name: PlayerSprite
   m_TagString: Player
@@ -168,7 +172,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.017673079}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4745279682576994761}
@@ -225,3 +229,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &8672728396507457240
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784743699839074003}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2ca993f559130f64bae4a0a7d4cd7ea4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
