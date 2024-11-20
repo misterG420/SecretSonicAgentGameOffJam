@@ -10,6 +10,11 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public void LoadFirstMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void LoadMenu()
     {
         SceneManager.LoadScene("IntroMenu");
