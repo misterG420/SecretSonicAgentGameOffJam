@@ -2,76 +2,92 @@ using UnityEngine;
 
 public class PlayerDragMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 5f;
+    public float moveSpeed = 2f;
+    private bool isMoving = false;
 
-    private Vector2 targetPosition;
-    private bool isDragging = false;
-
-    public Animator playerAnimator; // Reference to the player's Animator
+    private float wobbleTimer = 0f;       // Timer for wobble
+    private float wobbleDuration = 0.25f;   // Time to complete a full wobble cycle
+    private bool isDragging = false;     // For touch input
+    private Vector2 targetPosition;      // For touch input
 
     void Update()
     {
-        // Handle input (touch or mouse)
-        HandleInput();
+        // Check movement and handle controls
+        HandleKeyboardInput();
+        HandleTouchInput();
 
-        // Move and rotate the player towards the target position
-        MovePlayer();
-
-        // Trigger move animation if player is dragging
-        if (isDragging)
+        // Apply wobble effect if moving
+        if (isMoving)
         {
-            if (!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Moving")) // Ensure "Moving" isn't already triggered
-            {
-                playerAnimator.SetTrigger("Move"); // Trigger the move animation
-                Debug.Log("Move animation should play!");
-            }
+            ApplyWobbleEffect();
+        }
+        else
+        {
+            ResetRotation(); // Stop wobbling when not moving
         }
     }
 
-    void HandleInput()
+    void HandleKeyboardInput()
     {
-        if (Input.touchCount > 0) // For mobile devices
-        {
-            Touch touch = Input.GetTouch(0); // Get the first touch
+        // Get WASD input
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
-            if (touch.phase == TouchPhase.Began) // If touch begins
+        Vector2 moveDirection = new Vector2(moveX, moveY).normalized;
+
+        if (moveDirection != Vector2.zero)
+        {
+            isMoving = true;
+            transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            isMoving = false;
+        }
+    }
+
+    void HandleTouchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
             {
                 isDragging = true;
-                targetPosition = Camera.main.ScreenToWorldPoint(touch.position); // Convert touch position to world space
+                targetPosition = Camera.main.ScreenToWorldPoint(touch.position);
             }
-            else if (touch.phase == TouchPhase.Moved) // If touch moves
+            else if (touch.phase == TouchPhase.Moved)
             {
-                targetPosition = Camera.main.ScreenToWorldPoint(touch.position); // Update target position
+                targetPosition = Camera.main.ScreenToWorldPoint(touch.position);
             }
-            else if (touch.phase == TouchPhase.Ended) // If touch ends
+            else if (touch.phase == TouchPhase.Ended)
             {
                 isDragging = false;
             }
-        }
-        else if (Input.GetMouseButtonDown(0)) // For desktop (mouse)
-        {
-            isDragging = true;
-            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Convert mouse position to world space
-        }
-        else if (Input.GetMouseButtonUp(0)) // If mouse is released
-        {
-            isDragging = false;
+
+            if (isDragging)
+            {
+                isMoving = true;
+                Vector2 currentPosition = transform.position;
+                Vector2 direction = (targetPosition - currentPosition).normalized;
+
+                transform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+            }
         }
     }
 
-    void MovePlayer()
+    void ApplyWobbleEffect()
     {
-        if (isDragging)
-        {
-            // Move towards the target position
-            Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        wobbleTimer += Time.deltaTime;
 
-            // Rotate the player to face the target position
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90)); // Player rotates around the z-axis
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+        float wobbleAngle = Mathf.Lerp(-7f, 7f, Mathf.PingPong(wobbleTimer / wobbleDuration, 1));
+        transform.rotation = Quaternion.Euler(0, 0, wobbleAngle);
+    }
+
+    void ResetRotation()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        wobbleTimer = 0f; // Reset wobble timer
     }
 }

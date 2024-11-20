@@ -53,7 +53,8 @@ MonoBehaviour:
   amplificationFactor: 35
   resetTime: 2
   playerAnimator: {fileID: 8672728396507457240}
-  shoutThreshold: 0.7
+  playerSpriteRenderer: {fileID: 8310218969355542528}
+  originalSprite: {fileID: 21300000, guid: 1c410cb4385e5ed41b4d816877d98d0a, type: 3}
 --- !u!114 &5624023328699643002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,8 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  rotationSpeed: 2
-  playerAnimator: {fileID: 8672728396507457240}
+  rotationSpeed: 7777
+  wobbleAngle: 7
+  wobbleFrequency: 7777
 --- !u!114 &7204727181672012188
 MonoBehaviour:
   m_ObjectHideFlags: 0

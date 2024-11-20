@@ -20,18 +20,32 @@ public class PlayerController : MonoBehaviour
     private float revealDelay = 0.04f;
 
     public Animator playerAnimator; // Reference to the player's Animator
-    public float shoutThreshold = 1.2f; // Loudness threshold for the shout animation
+    private float shoutThreshold = 0.7f;
+    public SpriteRenderer playerSpriteRenderer;
+    public Sprite originalSprite;
 
     void Start()
     {
-        ResetMap();
-        LoadBaseline();
-        StartMicrophone();
-
+       
         if (playerAnimator == null)
         {
             playerAnimator = GetComponent<Animator>(); // Get the Animator component if not set
         }
+
+        if (playerSpriteRenderer == null)
+        {
+            playerSpriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer if not set
+        }
+
+        if (playerSpriteRenderer != null)
+        {
+            originalSprite = playerSpriteRenderer.sprite; // Store the original sprite
+        }
+        ResetMap();
+        LoadBaseline();
+        StartMicrophone();
+        ResetSprite();
+
     }
 
     private void LoadBaseline()
@@ -88,6 +102,7 @@ public class PlayerController : MonoBehaviour
             {
                 playerAnimator.SetTrigger("Shout");
                 Debug.Log("Shout animation should play!");
+                ResetSprite();
             }
         }
 
@@ -112,6 +127,15 @@ public class PlayerController : MonoBehaviour
             ResetMap();
         }
     }
+
+    public void ResetSprite()
+    {
+        if (playerSpriteRenderer != null && originalSprite != null)
+        {
+            playerSpriteRenderer.sprite = originalSprite;
+        }
+    }
+
 
     private float GetNormalizedLoudness(float[] data)
     {
