@@ -1,10 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+
+
 
 public class EnemyScript : MonoBehaviour
 {
     public float patrolSpeed = 2f;
     public float detectionRadius = 5f;
-    public GameObject alertIcon; 
+    public GameObject alertIcon;
 
     private Transform[] patrolPoints;
     private int currentPatrolIndex = 0;
@@ -12,10 +17,15 @@ public class EnemyScript : MonoBehaviour
     private Vector3 eventPosition;
     private Rigidbody2D rb;
     private bool isMovingToEvent = false;
-    private Vector3 previousDirection; 
-    private bool isReturning = false;  
-    private Transform player; 
-    private bool isShowingAlert = false; 
+    private Vector3 previousDirection;
+    private bool isReturning = false;
+    private Transform player;
+    private bool isShowingAlert = false;
+
+    // New variables for wobble effect
+    private float wobbleSpeed = 0.25f; // Time for one full wobble cycle 
+    private float wobbleAmount = 9f;   // How much to rotate (-9 to 9 degrees)
+    private bool isWobbling = true;
 
     void Start()
     {
@@ -44,6 +54,9 @@ public class EnemyScript : MonoBehaviour
 
         // Hide alert icon initially
         alertIcon.SetActive(false);
+
+        // Start wobble effect
+        StartCoroutine(WobbleEffect());
 
         // Subscribe to the event
         ObstacleCollision.OnPlayerHit += MoveToEventPosition;
@@ -156,5 +169,39 @@ public class EnemyScript : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+
+    // Coroutine to handle the wobble effect
+    IEnumerator WobbleEffect()
+    {
+        while (isWobbling)
+        {
+            float timeElapsed = 0f;
+            float startRotation = transform.rotation.eulerAngles.z;
+            float endRotation = startRotation + wobbleAmount;
+
+            while (timeElapsed < wobbleSpeed)
+            {
+                float t = timeElapsed / wobbleSpeed;
+                float zRotation = Mathf.Lerp(startRotation, endRotation, t);
+                transform.rotation = Quaternion.Euler(0f, 0f, zRotation);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // Swap directions and wobble back
+            timeElapsed = 0f;
+            startRotation = transform.rotation.eulerAngles.z;
+            endRotation = startRotation - wobbleAmount;
+
+            while (timeElapsed < wobbleSpeed)
+            {
+                float t = timeElapsed / wobbleSpeed;
+                float zRotation = Mathf.Lerp(startRotation, endRotation, t);
+                transform.rotation = Quaternion.Euler(0f, 0f, zRotation);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
     }
 }
