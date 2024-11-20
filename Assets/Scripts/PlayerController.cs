@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-       
+        ResetSprite();
         if (playerAnimator == null)
         {
             playerAnimator = GetComponent<Animator>(); // Get the Animator component if not set
@@ -41,10 +41,11 @@ public class PlayerController : MonoBehaviour
         {
             originalSprite = playerSpriteRenderer.sprite; // Store the original sprite
         }
+        
         ResetMap();
         LoadBaseline();
         StartMicrophone();
-        ResetSprite();
+
 
     }
 
