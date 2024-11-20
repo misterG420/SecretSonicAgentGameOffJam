@@ -24,8 +24,6 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer playerSpriteRenderer;
     public Sprite originalSprite;
 
-    private bool isShouting = false;
-
     void Start()
     {
         ResetSprite();
@@ -86,8 +84,15 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         DetectSound();
+
+        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Shouting") && stateInfo.normalizedTime >= 1f)
+        {
+            // Reset the trigger after the shout animation is done playing
+            playerAnimator.ResetTrigger("Shout");
+        }
     }
-    private void DetectSound()
+    void DetectSound()
     {
         if (!Microphone.IsRecording(null)) StartMicrophone();
 
@@ -98,29 +103,17 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
 
-        // Trigger shout animation if loudness exceeds threshold and not already shouting
-        if (loudness > baselineLoudness * shoutThreshold && !isShouting)
+        // Play shout animation if loudness exceeds threshold, and ensure it doesn't play again before it's finished
+        if (loudness > baselineLoudness * shoutThreshold)
         {
-            isShouting = true;
-            playerAnimator.SetTrigger("Shout");  // Trigger the Shout animation
-            Debug.Log("Shout animation triggered!");
+            // Only trigger if the current animation is not already shouting
+            if (!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Shouting"))
+            {
+                playerAnimator.SetTrigger("Shout");
+                Debug.Log("Shout animation triggered!");
+            }
         }
 
-        // Check if the shout animation is finished and reset the shouting state
-        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Shouting") && stateInfo.normalizedTime >= 1f)
-        {
-            isShouting = false;  // Animation has finished, so allow another shout
-            Debug.Log("Shout animation finished!");
-        }
-
-        // Only reset sprite after the shout animation has finished and is no longer playing
-        if (!stateInfo.IsName("Shouting") && playerSpriteRenderer != null && originalSprite != null)
-        {
-            ResetSprite();
-        }
-
-        // Map reveal logic
         if (loudness > baselineLoudness * 1.005f)
         {
             Debug.Log("Loudness threshold exceeded!");
