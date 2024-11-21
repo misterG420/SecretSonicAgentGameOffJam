@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ShoutAnim
+  m_Name: ChatAnim
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,8 +21,16 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 570a97ec200011249966cfcaa44b8aa9, type: 3}
+      value: {fileID: 21300000, guid: 092eef7e670d9774292d2263f1dfd0a5, type: 3}
     - time: 0.083333336
+      value: {fileID: 21300000, guid: 8f31cf7e84152864393515e4daaf1ef8, type: 3}
+    - time: 0.16666667
+      value: {fileID: 21300000, guid: 07acc1bf998b7eb45b46dbfbaef66cb3, type: 3}
+    - time: 0.25
+      value: {fileID: 21300000, guid: 149ae3456ad5fff4fa3170575869098a, type: 3}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: 570a97ec200011249966cfcaa44b8aa9, type: 3}
+    - time: 0.41666666
       value: {fileID: 21300000, guid: 0e6d05ae4e4df8044ac31da6d64e398d, type: 3}
     attribute: m_Sprite
     path: 
@@ -46,6 +54,10 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
+    - {fileID: 21300000, guid: 092eef7e670d9774292d2263f1dfd0a5, type: 3}
+    - {fileID: 21300000, guid: 8f31cf7e84152864393515e4daaf1ef8, type: 3}
+    - {fileID: 21300000, guid: 07acc1bf998b7eb45b46dbfbaef66cb3, type: 3}
+    - {fileID: 21300000, guid: 149ae3456ad5fff4fa3170575869098a, type: 3}
     - {fileID: 21300000, guid: 570a97ec200011249966cfcaa44b8aa9, type: 3}
     - {fileID: 21300000, guid: 0e6d05ae4e4df8044ac31da6d64e398d, type: 3}
   m_AnimationClipSettings:
@@ -53,12 +65,12 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.16666667
+    m_StopTime: 0.5
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
-    m_LoopTime: 0
+    m_LoopTime: 1
     m_LoopBlend: 0
     m_LoopBlendOrientation: 0
     m_LoopBlendPositionY: 0
