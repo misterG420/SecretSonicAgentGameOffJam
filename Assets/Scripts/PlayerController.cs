@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
         float loudness = GetNormalizedLoudness(data);
         loudnessSlider.value = loudness;
 
-        Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
+        //Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
 
         // Play shout animation if loudness exceeds threshold, and ensure it doesn't play again before it's finished
         if (loudness > baselineLoudness * shoutThreshold)

@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,16 +12,21 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private CircleCollider2D playerCollider;
 
+    private AchievementManager achievementManager;
+    private bool levelInProgress = false;
+
     private void OnEnable()
     {
-        OnGameOver += ActivateGameOverCanvas;
-        OnVictory += ActivateVictoryCanvas;
+        OnGameOver += HandleGameOver;
+        OnVictory += HandleVictoryCondition;
+        Debug.Log("Subscribed HandleVictoryCondition to OnVictory");
     }
 
     private void OnDisable()
     {
-        OnGameOver -= ActivateGameOverCanvas;
-        OnVictory -= ActivateVictoryCanvas;
+        OnGameOver -= HandleGameOver;
+        OnVictory -= HandleVictoryCondition;
+        Debug.Log("Unsubscribed HandleVictoryCondition from OnVictory");
     }
 
     private void Start()
@@ -33,27 +38,37 @@ public class GameManager : MonoBehaviour
 
         if (player != null)
         {
-            playerCollider = player.GetComponent<CircleCollider2D>();
-
-            if (playerCollider == null)
-            {
-                playerCollider = player.AddComponent<CircleCollider2D>();
-            }
+            playerCollider = player.GetComponent<CircleCollider2D>() ?? player.AddComponent<CircleCollider2D>();
             playerCollider.radius = 0.22f;
         }
+        achievementManager = FindObjectOfType<AchievementManager>();
+
+        Debug.Log($"GameManager initialized. OnVictory subscribers: {OnVictory?.GetInvocationList().Length ?? 0}");
+    }
+
+    public void StartLevel(string levelName)
+    {
+        if (achievementManager != null)
+        {
+            achievementManager.StartLevel(levelName);
+        }
+        levelInProgress = true;
+        Debug.Log("Level started, levelInProgress set to true");
     }
 
     public static void TriggerGameOver()
     {
         OnGameOver?.Invoke();
+        Debug.Log("TriggerGameOver() called");
     }
 
     public static void TriggerVictory()
     {
         OnVictory?.Invoke();
+        Debug.Log($"TriggerVictory() called. OnVictory subscribers: {OnVictory?.GetInvocationList().Length ?? 0}");
     }
 
-    private void ActivateGameOverCanvas()
+    private void HandleGameOver()
     {
         if (player != null)
         {
@@ -61,15 +76,27 @@ public class GameManager : MonoBehaviour
         }
 
         gameOverCanvas.SetActive(true);
+        levelInProgress = false;
+        Debug.Log("Game Over handled");
     }
 
-    private void ActivateVictoryCanvas()
+    private void HandleVictoryCondition()
     {
+        Debug.Log($"HandleVictoryCondition called. Level in progress: {levelInProgress}");
+        if (!levelInProgress) return;
+
         if (player != null && playerCollider != null)
         {
-            Destroy(playerCollider); // Remove the CircleCollider2D
+            Destroy(playerCollider);
+        }
+
+        if (achievementManager != null)
+        {
+            achievementManager.EndLevel();
         }
 
         victoryCanvas.SetActive(true);
+        levelInProgress = false;
+        Debug.Log("Victory condition handled");
     }
 }
