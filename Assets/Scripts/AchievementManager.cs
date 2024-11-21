@@ -9,26 +9,26 @@ public class AchievementManager : MonoBehaviour
     public Text bestTimeText;
 
     [Header("Achievement Settings")]
-    public float achievementBenchmarkTime = 60f; // Example benchmark time for an achievement
-    public Sprite achievementSprite; // Sprite to show when achievement is unlocked
+    public float achievementBenchmarkTime = 60f; 
+    public Sprite achievementSprite; 
 
     private float bestTime;
 
     void OnEnable()
     {
-        // Subscribe to the victory event from GameManager
+
         GameManager.OnVictory += OnLevelComplete;
     }
 
     void OnDisable()
     {
-        // Unsubscribe when no longer needed
+
         GameManager.OnVictory -= OnLevelComplete;
     }
 
     void Start()
     {
-        // Load the best time from PlayerPrefs if it exists
+
         bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue); // Default to max if no time is saved
     }
 
