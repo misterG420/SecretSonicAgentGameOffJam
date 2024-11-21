@@ -155,6 +155,9 @@ public class SoundPatternDetector : MonoBehaviour
         {
             cheatButton.gameObject.SetActive(true);
             feedbackText.text = "Cheat unlocked! Press the button to activate cheat.";
+            
+            PlayerPrefs.SetInt("hasAccessToLevelSelector", 1); // 1 for unlocked, 0 for locked
+            PlayerPrefs.Save();
         }
         else
         {
