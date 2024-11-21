@@ -2385,7 +2385,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7948764208085306662}
         m_TargetAssemblyTypeName: LevelSelectorScript, Assembly-CSharp
-        m_MethodName: LoadLevel3
+        m_MethodName: LoadLevel4
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
