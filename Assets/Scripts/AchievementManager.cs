@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class AchievementManager : MonoBehaviour
 {
@@ -8,13 +9,14 @@ public class AchievementManager : MonoBehaviour
     public Text levelTimeText;
     public Text bestTimeText;
     public Text benchmarkTimeText;
-    public Text specialAchievementText; 
+    public Text specialAchievementText;
 
     [Header("Achievement Settings")]
     public float achievementBenchmarkTime = 45;
     public Sprite achievementSprite;
 
     private float bestTime;
+    private string currentSceneName;
 
     void OnEnable()
     {
@@ -28,7 +30,11 @@ public class AchievementManager : MonoBehaviour
 
     void Start()
     {
-        bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue);
+
+        currentSceneName = SceneManager.GetActiveScene().name;
+
+        // Load the best time for the current level using the scene name
+        bestTime = PlayerPrefs.GetFloat($"BestTime_{currentSceneName}", float.MaxValue);
         bestTime = Mathf.Round(bestTime * 100f) / 100f;
         benchmarkTimeText.text = $"Benchmark: {achievementBenchmarkTime:F2} seconds";
     }
@@ -42,19 +48,19 @@ public class AchievementManager : MonoBehaviour
         if (timeTaken < bestTime)
         {
             bestTime = timeTaken;
-            PlayerPrefs.SetFloat("BestTime", bestTime);
+            PlayerPrefs.SetFloat($"BestTime_{currentSceneName}", bestTime);
         }
 
         if (timeTaken <= achievementBenchmarkTime)
         {
             achievementImage.sprite = achievementSprite;
             achievementImage.enabled = true;
-            specialAchievementText.enabled = true; 
+            specialAchievementText.enabled = true;
         }
         else
         {
             achievementImage.enabled = false;
-            specialAchievementText.enabled = false; 
+            specialAchievementText.enabled = false;
         }
     }
 }
