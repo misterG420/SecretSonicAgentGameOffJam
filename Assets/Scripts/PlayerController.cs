@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
     {
         Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, revealRadius);
 
-        Debug.Log($"Objects in range: {objectsInRange.Length}");
+        //Debug.Log($"Objects in range: {objectsInRange.Length}");
 
         List<Collider2D> sortedObjects = new List<Collider2D>(objectsInRange);
         sortedObjects.Sort((a, b) => Vector2.Distance(transform.position, a.transform.position)
