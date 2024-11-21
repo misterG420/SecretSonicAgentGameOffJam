@@ -1251,10 +1251,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4536594912436080486, guid: e54ae0357fbc1b84eb265b2110c4bdfa, type: 3}
-      propertyPath: flashDuration
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5542406226965964947, guid: e54ae0357fbc1b84eb265b2110c4bdfa, type: 3}
       propertyPath: m_Name
       value: Document
