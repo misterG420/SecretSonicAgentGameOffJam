@@ -65,9 +65,15 @@ public class GameManager : MonoBehaviour
 
     private void ActivateVictoryCanvas()
     {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+
         if (player != null && playerCollider != null)
         {
-            Destroy(playerCollider); // Remove the CircleCollider2D
+            Destroy(playerCollider);
         }
 
         victoryCanvas.SetActive(true);

@@ -2351,10 +2351,6 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4745279682576994761, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4745279682576994761, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.3
       objectReference: {fileID: 0}
@@ -2393,10 +2389,6 @@ PrefabInstance:
     - target: {fileID: 4745279682576994761, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5624023328699643002, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
-      propertyPath: wobbleFrequency
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6045935987055845881, guid: e907fdd5cd1c0d146a9c76a2d6671f77, type: 3}
       propertyPath: loudnessSlider
