@@ -7,10 +7,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject victoryCanvas;
 
     public static event Action OnGameOver;
-    public static event Action OnVictory;
+    public static event Action<float> OnVictory; // Changed to pass time for victory
 
     private GameObject player;
     private CircleCollider2D playerCollider;
+    private float startTime;
 
     private void OnEnable()
     {
@@ -28,6 +29,8 @@ public class GameManager : MonoBehaviour
     {
         gameOverCanvas.SetActive(false);
         victoryCanvas.SetActive(false);
+
+        StartLevel();
 
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -48,9 +51,9 @@ public class GameManager : MonoBehaviour
         OnGameOver?.Invoke();
     }
 
-    public static void TriggerVictory()
+    public static void TriggerVictory(float timeTaken)
     {
-        OnVictory?.Invoke();
+        OnVictory?.Invoke(timeTaken); // Pass the time taken to the event subscribers
     }
 
     private void ActivateGameOverCanvas()
@@ -63,7 +66,7 @@ public class GameManager : MonoBehaviour
         gameOverCanvas.SetActive(true);
     }
 
-    private void ActivateVictoryCanvas()
+    private void ActivateVictoryCanvas(float timeTaken)
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
@@ -77,5 +80,19 @@ public class GameManager : MonoBehaviour
         }
 
         victoryCanvas.SetActive(true);
+
+
+    }
+
+    public void CompleteLevel()
+    {
+        float timeTaken = Time.time - startTime;
+        TriggerVictory(timeTaken); 
+    }
+
+
+    public void StartLevel()
+    {
+        startTime = Time.time;
     }
 }

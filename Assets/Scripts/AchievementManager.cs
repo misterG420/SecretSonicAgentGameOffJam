@@ -1,98 +1,60 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AchievementManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class LevelData
-    {
-        public string levelName; 
-        public float[] achievementTimes; 
-        public Sprite[] achievementSprites; 
-    }
-
-    public List<LevelData> levels;
-    public GameObject victoryScreen;
-    public Image[] achievementIcons; 
-    public Text levelTimeText; 
+    [Header("UI References")]
+    public Image achievementImage;
+    public Text levelTimeText;
     public Text bestTimeText;
 
-    private Dictionary<string, float> bestTimes = new Dictionary<string, float>();
-    private string currentLevel;
-    private float startTime;
+    [Header("Achievement Settings")]
+    public float achievementBenchmarkTime = 60f; // Example benchmark time for an achievement
+    public Sprite achievementSprite; // Sprite to show when achievement is unlocked
+
+    private float bestTime;
+
+    void OnEnable()
+    {
+        // Subscribe to the victory event from GameManager
+        GameManager.OnVictory += OnLevelComplete;
+    }
+
+    void OnDisable()
+    {
+        // Unsubscribe when no longer needed
+        GameManager.OnVictory -= OnLevelComplete;
+    }
 
     void Start()
     {
-
-        foreach (var level in levels)
-        {
-            if (PlayerPrefs.HasKey(level.levelName))
-            {
-                bestTimes[level.levelName] = PlayerPrefs.GetFloat(level.levelName);
-            }
-            else
-            {
-                bestTimes[level.levelName] = float.MaxValue; // Default to max time
-            }
-        }
+        // Load the best time from PlayerPrefs if it exists
+        bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue); // Default to max if no time is saved
     }
 
-    public void StartLevel(string levelName)
+    public void OnLevelComplete(float timeTaken)
     {
-        currentLevel = levelName;
-        startTime = Time.time; // rreset
-    }
-
-    public void EndLevel()
-    {
-        if (string.IsNullOrEmpty(currentLevel)) return;
-
-        float timeTaken = Time.time - startTime;
-
-        // ppdate  best time  current t is faster
-        if (timeTaken < bestTimes[currentLevel])
-        {
-            bestTimes[currentLevel] = timeTaken;
-            PlayerPrefs.SetFloat(currentLevel, timeTaken); 
-        }
-
-        ShowVictoryScreen(currentLevel, timeTaken);
-        currentLevel = null; // Reset current level
-        //Question: Will the time sdtop if not victory screen but game over screen?
-    }
-
-    private void ShowVictoryScreen(string levelName, float timeTaken)
-    {
-        victoryScreen.SetActive(true);
-
+        // Update the level time UI
         levelTimeText.text = $"Time: {timeTaken:F2} seconds";
-        bestTimeText.text = $"Best Time: {bestTimes[levelName]:F2} seconds";
+        bestTimeText.text = $"Best Time: {bestTime:F2} seconds";
 
-        // ffind the level data for the current level
-        LevelData levelData = levels.Find(level => level.levelName == levelName);
-
-        // check achievemeents
-        for (int i = 0; i < achievementIcons.Length; i++)
+        // Check if the time taken is less than the best time and update
+        if (timeTaken < bestTime)
         {
-            if (i < levelData.achievementTimes.Length && timeTaken <= levelData.achievementTimes[i])
-            {
-                achievementIcons[i].sprite = levelData.achievementSprites[i];
-                achievementIcons[i].enabled = true;
-            }
-            else
-            {
-                achievementIcons[i].enabled = false;
-            }
+            bestTime = timeTaken;
+            PlayerPrefs.SetFloat("BestTime", bestTime); // Save the new best time
         }
-    }
 
-    public void ResetBestTimes()
-    {
-        foreach (var level in levels)
+        // Check if the time taken is below the achievement benchmark
+        if (timeTaken <= achievementBenchmarkTime)
         {
-            PlayerPrefs.DeleteKey(level.levelName);
-            bestTimes[level.levelName] = float.MaxValue;
+            // Unlock the achievement and display the achievement sprite
+            achievementImage.sprite = achievementSprite;
+            achievementImage.enabled = true;
+        }
+        else
+        {
+            achievementImage.enabled = false; // Hide achievement icon if no achievement
         }
     }
 }
