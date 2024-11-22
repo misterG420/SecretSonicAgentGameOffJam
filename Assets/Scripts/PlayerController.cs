@@ -29,17 +29,17 @@ public class PlayerController : MonoBehaviour
         ResetSprite();
         if (playerAnimator == null)
         {
-            playerAnimator = GetComponent<Animator>(); // Get the Animator component if not set
+            playerAnimator = GetComponent<Animator>(); 
         }
 
         if (playerSpriteRenderer == null)
         {
-            playerSpriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer if not set
+            playerSpriteRenderer = GetComponent<SpriteRenderer>(); 
         }
 
         if (playerSpriteRenderer != null)
         {
-            originalSprite = playerSpriteRenderer.sprite; // Store the original sprite
+            originalSprite = playerSpriteRenderer.sprite; 
         }
         
         ResetMap();

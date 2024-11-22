@@ -12,7 +12,6 @@ public class PlayerDragMovement : MonoBehaviour
 
     void Update()
     {
-        // Check movement and handle controls
         HandleKeyboardInput();
         HandleTouchInput();
 
@@ -57,7 +56,7 @@ public class PlayerDragMovement : MonoBehaviour
                 isDragging = true;
                 targetPosition = Camera.main.ScreenToWorldPoint(touch.position);
             }
-            else if (touch.phase == TouchPhase.Moved)
+            else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
             {
                 targetPosition = Camera.main.ScreenToWorldPoint(touch.position);
             }
@@ -69,13 +68,23 @@ public class PlayerDragMovement : MonoBehaviour
             if (isDragging)
             {
                 isMoving = true;
-                Vector2 currentPosition = transform.position;
+                Vector2 currentPosition = (Vector2)transform.position;
                 Vector2 direction = (targetPosition - currentPosition).normalized;
 
-                transform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+                // Directly set position if very close to the target to prevent floaty movement
+                if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
+                {
+                    transform.position = targetPosition;
+                }
+                else
+                {
+                    // Use Translate for snappier movement, increase moveSpeed for responsiveness
+                    transform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+                }
             }
         }
     }
+
 
     void ApplyWobbleEffect()
     {
