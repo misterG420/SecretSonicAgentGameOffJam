@@ -4,41 +4,62 @@ using System.Collections;
 
 public class OperatorText : MonoBehaviour
 {
-    public Text displayText; 
-    public GameObject endButton; 
-    public float letterDelay = 0.02f; 
-    [TextArea(3, 10)]
-    public string textToDisplay; 
+    public Text operatorText;
+    public Button calibrateButton;
+    public Slider loudnessSlider;
+    public string[] linesOfText;
+
+    private int currentLine = 0;
+    private bool isDisplayingText = false;
+    private GameObject player;
 
     private void Start()
     {
-        if (endButton != null)
-        {
-            endButton.SetActive(false); 
-        }
+        player = GameObject.FindGameObjectWithTag("Player");
 
-        if (displayText != null)
+        calibrateButton.gameObject.SetActive(false);
+        loudnessSlider.gameObject.SetActive(false);
+    }
+
+    public void StartTyping()
+    {
+        if (!isDisplayingText)
         {
-            displayText.text = ""; 
             StartCoroutine(TypeText());
-        }
-        else
-        {
-            Debug.LogError("No displayText assigned to OperatorText script!");
         }
     }
 
     private IEnumerator TypeText()
     {
-        foreach (char letter in textToDisplay)
+        isDisplayingText = true;
+
+        foreach (string line in linesOfText)
         {
-            displayText.text += letter; 
-            yield return new WaitForSeconds(letterDelay);
+            operatorText.text = "";
+            foreach (char letter in line.ToCharArray())
+            {
+                operatorText.text += letter;
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            currentLine++;
         }
 
-        if (endButton != null)
+        if (currentLine >= linesOfText.Length)
         {
-            endButton.SetActive(true); 
+            calibrateButton.gameObject.SetActive(true);
+            loudnessSlider.gameObject.SetActive(true);
+
+            if (player != null)
+            {
+                player.GetComponent<PlayerTutorialSoundAbilityScript>().enabled = true;
+            }
+            else
+            {
+                Debug.LogError("Player not found!");
+            }
         }
     }
 }
