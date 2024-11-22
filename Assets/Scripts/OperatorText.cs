@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;  // Import for scene management
 using System.Collections;
 
 public class OperatorText : MonoBehaviour
@@ -8,6 +9,7 @@ public class OperatorText : MonoBehaviour
     public Button calibrateButton;
     public Slider loudnessSlider;
     public string[] linesOfText;
+    public string sceneToLoad = "TutorialLevel2";  
 
     private int currentLine = 0;
     private bool isDisplayingText = false;
@@ -19,22 +21,6 @@ public class OperatorText : MonoBehaviour
 
         calibrateButton.gameObject.SetActive(false);
         loudnessSlider.gameObject.SetActive(false);
-
-
-        if (player != null)
-        {
-            var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
-            var initialMovementScript = player.GetComponent<PlayerTutorialLevelController>();
-            
-            if (tutorialScript != null)
-            {
-                tutorialScript.enabled = false; 
-            }
-        }
-        else
-        {
-            Debug.LogError("Player not found!");
-        }
     }
 
     public void StartTyping()
@@ -66,31 +52,9 @@ public class OperatorText : MonoBehaviour
         if (currentLine >= linesOfText.Length)
         {
             calibrateButton.gameObject.SetActive(true);
-            loudnessSlider.gameObject.SetActive(true);
+            operatorText.text = "";
 
-            if (player != null)
-            {
-                var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
-                var initalMovementlScript = player.GetComponent<PlayerTutorialLevelController>();
-
-                if (tutorialScript != null)
-                {
-                    tutorialScript.enabled = true;
-                    operatorText.text = "";
-                    Debug.Log("PlayerTutorialSoundAbilityScript should now be active");
-                }
-                
-                if (initalMovementlScript != null)
-                {
-                    initalMovementlScript.enabled = false;
-                    Debug.Log("initialMovementScript should now be removed");
-                }
-
-                else
-                {
-                    Debug.LogError("PlayerTutorialSoundAbilityScript not found on player!");
-                }
-            }
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 }
