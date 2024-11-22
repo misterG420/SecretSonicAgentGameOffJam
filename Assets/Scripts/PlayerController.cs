@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
         loudnessSlider.value = loudness;
 
         // Debug log for testing
-        Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * shoutThreshold}");
+        //Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * shoutThreshold}");
 
         // Trigger shout animation if loudness exceeds the shout threshold
         if (loudness > baselineLoudness * shoutThreshold)
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
         // Trigger map reveal if loudness exceeds the reveal threshold
         if (loudness > baselineLoudness * 1.005f)
         {
-            Debug.Log("Loudness threshold exceeded! Starting reveal.");
+            //Debug.Log("Loudness threshold exceeded! Starting reveal.");
 
             if (revealWaveCoroutine != null)
             {
