@@ -848,7 +848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbcd6de0b9d8e464e9b26c99a129f2e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverCanvas: {fileID: 0}
+  gameOverCanvas: {fileID: 7045607435409300735}
   victoryCanvas: {fileID: 327322658752146046}
 --- !u!4 &1088877318
 Transform:
