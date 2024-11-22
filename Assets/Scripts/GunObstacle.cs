@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections; // Add this to resolve IEnumerator issue
+using System.Collections; 
 
 public class GunObstacle : MonoBehaviour
 {
@@ -24,8 +24,8 @@ public class GunObstacle : MonoBehaviour
             lineRenderer.tag = "Enemy";
             lineRenderer.enabled = false;
 
-            // Set the color of the line renderer to #D62828 (hex color)
-            if (ColorUtility.TryParseHtmlString("#D62828", out Color color))
+
+            if (ColorUtility.TryParseHtmlString("#ca6f62", out Color color))
             {
                 lineRenderer.startColor = color;
                 lineRenderer.endColor = color;
