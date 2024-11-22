@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
     private bool isMapRevealed = false;
 
     private float revealRadius = 2f;
-    private float revealSpeed = 2.6f;
-    private float revealDelay = 0.04f;
+    private float revealSpeed = 12f;
+    private float revealDelay = 0.02f;
 
     public Animator playerAnimator; // Reference to the player's Animator
     private float shoutThreshold = 0.7f;
@@ -101,12 +101,12 @@ public class PlayerController : MonoBehaviour
         float loudness = GetNormalizedLoudness(data);
         loudnessSlider.value = loudness;
 
-        //Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * 1.005f}");
+        // Debug log for testing
+        Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * shoutThreshold}");
 
-        // Play shout animation if loudness exceeds threshold, and ensure it doesn't play again before it's finished
+        // Trigger shout animation if loudness exceeds the shout threshold
         if (loudness > baselineLoudness * shoutThreshold)
         {
-            // Only trigger if the current animation is not already shouting
             if (!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Shouting"))
             {
                 playerAnimator.SetTrigger("Shout");
@@ -114,15 +114,49 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Trigger map reveal if loudness exceeds the reveal threshold
         if (loudness > baselineLoudness * 1.005f)
         {
-            Debug.Log("Loudness threshold exceeded!");
+            Debug.Log("Loudness threshold exceeded! Starting reveal.");
 
             if (revealWaveCoroutine != null)
             {
                 StopCoroutine(revealWaveCoroutine);
             }
+
+            // Start the map reveal coroutine
             revealWaveCoroutine = StartCoroutine(RevealMapWave());
+
+            // Trigger immediate fade-in for the closest object
+            Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, revealRadius);
+            if (objectsInRange.Length > 0)
+            {
+                Collider2D closestObject = null;
+                float closestDistance = Mathf.Infinity;
+
+                foreach (Collider2D col in objectsInRange)
+                {
+                    if (col.CompareTag("MapObject"))
+                    {
+                        float distance = Vector2.Distance(transform.position, col.transform.position);
+                        if (distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestObject = col;
+                        }
+                    }
+                }
+
+                if (closestObject != null)
+                {
+                    SpriteRenderer renderer = closestObject.GetComponent<SpriteRenderer>();
+                    if (renderer != null)
+                    {
+                        StartCoroutine(FadeInObject(renderer));
+                    }
+                }
+            }
+
             revealTimer = resetTime;
         }
 
@@ -135,6 +169,7 @@ public class PlayerController : MonoBehaviour
             ResetMap();
         }
     }
+
 
 
     public void ResetSprite()
