@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class BaselineCalibrationTutorialLevel : MonoBehaviour
 {
     public Button calibrateButton;
-    public float captureTime = 2f; 
+    public float captureTime = 2f;
     private AudioClip microphoneClip;
     private float baselineLoudness = 0f;
     private float captureTimer = 0f;
@@ -13,7 +13,6 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
 
     void Start()
     {
-
         if (calibrateButton != null)
         {
             calibrateButton.onClick.AddListener(StartCalibration);
@@ -36,13 +35,11 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
     {
         if (Microphone.devices.Length > 0)
         {
-            Microphone.End(null); // Stop any existing microphone instance
+            Microphone.End(null); 
 
-            // Determine microphone capabilities
             int minFreq, maxFreq;
             Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
 
-            // Use 44100 as default, but clamp within microphone-supported range
             int sampleRate = 44100;
             if (maxFreq > 0) sampleRate = Mathf.Clamp(sampleRate, minFreq, maxFreq);
 
@@ -75,7 +72,7 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
             isCalibrating = false;
 
 
-
+            Destroy(calibrateButton.gameObject);
         }
     }
 

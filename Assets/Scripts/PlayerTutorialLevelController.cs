@@ -86,8 +86,6 @@ public class PlayerTutorialLevelController : MonoBehaviour
         if (!hasInteractedWithOperator && collision.CompareTag("Operator"))
         {
             hasInteractedWithOperator = true;
-            Debug.Log("Player interacted with Operator! Activating features.");
-
         }
     }
 

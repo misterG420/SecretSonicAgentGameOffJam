@@ -117,7 +117,7 @@ public class PlayerTutorialSoundAbilityScript : MonoBehaviour
         loudnessSlider.value = loudness;
 
         // Debug log for testing
-        Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * shoutThreshold}");
+       // Debug.Log($"Loudness: {loudness}, Baseline: {baselineLoudness}, Threshold: {baselineLoudness * shoutThreshold}");
 
         // Trigger shout animation if loudness exceeds the shout threshold
         if (loudness > baselineLoudness * shoutThreshold)

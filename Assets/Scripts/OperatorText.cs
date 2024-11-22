@@ -19,6 +19,20 @@ public class OperatorText : MonoBehaviour
 
         calibrateButton.gameObject.SetActive(false);
         loudnessSlider.gameObject.SetActive(false);
+
+
+        if (player != null)
+        {
+            var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
+            if (tutorialScript != null)
+            {
+                tutorialScript.enabled = false; 
+            }
+        }
+        else
+        {
+            Debug.LogError("Player not found!");
+        }
     }
 
     public void StartTyping()
@@ -54,11 +68,16 @@ public class OperatorText : MonoBehaviour
 
             if (player != null)
             {
-                player.GetComponent<PlayerTutorialSoundAbilityScript>().enabled = true;
-            }
-            else
-            {
-                Debug.LogError("Player not found!");
+                var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
+                if (tutorialScript != null)
+                {
+                    tutorialScript.enabled = true;
+                    operatorText.text = "";
+                }
+                else
+                {
+                    Debug.LogError("PlayerTutorialSoundAbilityScript not found on player!");
+                }
             }
         }
     }

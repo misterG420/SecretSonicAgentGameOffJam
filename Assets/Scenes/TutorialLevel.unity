@@ -1013,7 +1013,6 @@ GameObject:
   - component: {fileID: 1006534061}
   - component: {fileID: 1006534060}
   - component: {fileID: 1006534059}
-  - component: {fileID: 1006534062}
   m_Layer: 5
   m_Name: CalibrateButton
   m_TagString: Untagged
@@ -1084,7 +1083,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1006534060}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1006534057}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1006534060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1123,20 +1134,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006534057}
   m_CullTransparentMesh: 1
---- !u!114 &1006534062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006534057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7775e200baca20d4984aedd68c5e30c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  calibrateButton: {fileID: 1006534059}
-  captureTime: 2
 --- !u!1 &1035264047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,6 +1239,52 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.8667576, y: 2.4731464, z: -0.011891149}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1320072218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1320072220}
+  - component: {fileID: 1320072219}
+  m_Layer: 0
+  m_Name: CalibrationButtonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1320072219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320072218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7775e200baca20d4984aedd68c5e30c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  calibrateButton: {fileID: 1006534059}
+  captureTime: 2
+--- !u!4 &1320072220
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320072218}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 270.09964, y: 748.9321, z: -2.5034652}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1649,6 +1692,7 @@ GameObject:
   - component: {fileID: 7268552824547265439}
   - component: {fileID: 6427402477413961582}
   - component: {fileID: 7268552824547265440}
+  - component: {fileID: 7268552824547265441}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2945,6 +2989,23 @@ MonoBehaviour:
   playerAnimator: {fileID: 4165955067304055922}
   playerSpriteRenderer: {fileID: 3663711928632922794}
   originalSprite: {fileID: 21300000, guid: d4ed322d6ec5a504b9fad14ad858fcc2, type: 3}
+--- !u!114 &7268552824547265441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58672877506554584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa6c7a38b3651764891865bfeb3a82f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplificationFactor: 35
+  resetTime: 2
+  playerAnimator: {fileID: 4165955067304055922}
+  playerSpriteRenderer: {fileID: 3663711928632922794}
+  originalSprite: {fileID: 21300000, guid: d4ed322d6ec5a504b9fad14ad858fcc2, type: 3}
 --- !u!114 &7314774993199183427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3497,3 +3558,4 @@ SceneRoots:
   - {fileID: 1958527215}
   - {fileID: 134931662}
   - {fileID: 289112086}
+  - {fileID: 1320072220}
