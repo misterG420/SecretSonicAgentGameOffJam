@@ -24,6 +24,8 @@ public class OperatorText : MonoBehaviour
         if (player != null)
         {
             var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
+            var initialMovementScript = player.GetComponent<PlayerTutorialLevelController>();
+            
             if (tutorialScript != null)
             {
                 tutorialScript.enabled = false; 
@@ -69,11 +71,21 @@ public class OperatorText : MonoBehaviour
             if (player != null)
             {
                 var tutorialScript = player.GetComponent<PlayerTutorialSoundAbilityScript>();
+                var initalMovementlScript = player.GetComponent<PlayerTutorialLevelController>();
+
                 if (tutorialScript != null)
                 {
                     tutorialScript.enabled = true;
                     operatorText.text = "";
+                    Debug.Log("PlayerTutorialSoundAbilityScript should now be active");
                 }
+                
+                if (initalMovementlScript != null)
+                {
+                    initalMovementlScript.enabled = false;
+                    Debug.Log("initialMovementScript should now be removed");
+                }
+
                 else
                 {
                     Debug.LogError("PlayerTutorialSoundAbilityScript not found on player!");

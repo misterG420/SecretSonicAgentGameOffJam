@@ -87,7 +87,7 @@ public class PlayerTutorialSoundAbilityScript : MonoBehaviour
             int sampleRate = 44100;
             if (maxFreq > 0) sampleRate = Mathf.Clamp(44100, minFreq, maxFreq);
 
-            Debug.Log($"Using sample rate: {sampleRate}, MinFreq: {minFreq}, MaxFreq: {maxFreq}");
+            //Debug.Log($"Using sample rate: {sampleRate}, MinFreq: {minFreq}, MaxFreq: {maxFreq}");
             microphoneClip = Microphone.Start(Microphone.devices[0], true, 1, sampleRate);
         }
         else
@@ -95,7 +95,6 @@ public class PlayerTutorialSoundAbilityScript : MonoBehaviour
             Debug.LogError("No microphone detected on this device.");
         }
     }
-
     void Update()
     {
         DetectSound();
@@ -103,7 +102,6 @@ public class PlayerTutorialSoundAbilityScript : MonoBehaviour
         AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
         if (stateInfo.IsName("Shouting") && stateInfo.normalizedTime >= 1f)
         {
-            // Reset the trigger after the shout animation is done playing
             playerAnimator.ResetTrigger("Shout");
         }
     }

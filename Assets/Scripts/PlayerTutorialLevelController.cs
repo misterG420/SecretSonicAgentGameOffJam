@@ -27,6 +27,7 @@ public class PlayerTutorialLevelController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("PlayerTutorialLevelController has been activated now");
 
         if (playerAnimator == null)
         {
