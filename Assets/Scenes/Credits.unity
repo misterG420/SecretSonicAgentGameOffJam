@@ -224,7 +224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000030518, y: -698}
+  m_AnchoredPosition: {x: -0.000030518, y: -635}
   m_SizeDelta: {x: 618.2117, y: 359.4317}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &241567150
@@ -448,7 +448,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1165859747}
         m_TargetAssemblyTypeName: LevelSelectorScript, Assembly-CSharp
-        m_MethodName: LoadMenu
+        m_MethodName: LoadFirstMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -686,7 +686,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 788}
+  m_AnchoredPosition: {x: 0, y: 683}
   m_SizeDelta: {x: 1028.6421, y: 306.0423}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1527218780
