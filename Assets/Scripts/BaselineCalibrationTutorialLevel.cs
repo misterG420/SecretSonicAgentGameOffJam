@@ -10,6 +10,7 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
     private float captureTimer = 0f;
     private bool isCalibrating = false;
 
+    public OperatorText operatorText; 
 
     void Start()
     {
@@ -20,6 +21,11 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
         else
         {
             Debug.LogError("Calibrate Button not assigned.");
+        }
+
+        if (operatorText == null)
+        {
+            Debug.LogError("OperatorText script reference is missing!");
         }
     }
 
@@ -35,7 +41,7 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
     {
         if (Microphone.devices.Length > 0)
         {
-            Microphone.End(null); 
+            Microphone.End(null);
 
             int minFreq, maxFreq;
             Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
@@ -67,12 +73,17 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
 
         if (captureTimer >= captureTime)
         {
-            baselineLoudness /= captureTime; // Calculate average baseline
+            baselineLoudness /= captureTime; 
             PlayerPrefs.SetFloat("BaselineLoudness", baselineLoudness);
             isCalibrating = false;
 
-
             Destroy(calibrateButton.gameObject);
+
+            // Notify OperatorText that calibration is complete
+            if (operatorText != null)
+            {
+                operatorText.OnCalibrationComplete();
+            }
         }
     }
 
@@ -83,6 +94,6 @@ public class BaselineCalibrationTutorialLevel : MonoBehaviour
         {
             sum += Mathf.Abs(data[i]);
         }
-        return (sum / data.Length) * 35f; // Amplification factor for sensitivity
+        return (sum / data.Length) * 35f; 
     }
 }

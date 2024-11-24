@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;  // Import for scene management
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class OperatorText : MonoBehaviour
@@ -9,11 +9,12 @@ public class OperatorText : MonoBehaviour
     public Button calibrateButton;
     public Slider loudnessSlider;
     public string[] linesOfText;
-    public string sceneToLoad = "TutorialLevel2";  
+    public string sceneToLoad = "TutorialLevel2";
 
     private int currentLine = 0;
     private bool isDisplayingText = false;
     private GameObject player;
+    private bool calibrationComplete = false;
 
     private void Start()
     {
@@ -54,7 +55,15 @@ public class OperatorText : MonoBehaviour
             calibrateButton.gameObject.SetActive(true);
             operatorText.text = "";
 
+            // Wait until calibration is complete
+            yield return new WaitUntil(() => calibrationComplete);
             SceneManager.LoadScene(sceneToLoad);
         }
+    }
+
+    // Called by the BaselineCalibrationTutorialLevel script
+    public void OnCalibrationComplete()
+    {
+        calibrationComplete = true;
     }
 }

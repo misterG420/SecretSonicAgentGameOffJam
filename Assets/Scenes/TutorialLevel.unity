@@ -927,7 +927,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 53.47, y: -724}
+  m_AnchoredPosition: {x: 53.47, y: -692}
   m_SizeDelta: {x: 729.52, y: 393.2613}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1181271436
@@ -992,6 +992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   calibrateButton: {fileID: 1006534059}
   captureTime: 2
+  operatorText: {fileID: 289112089}
 --- !u!4 &1320072220
 Transform:
   m_ObjectHideFlags: 0
@@ -1110,7 +1111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 84, y: -22}
+  m_AnchoredPosition: {x: 84, y: 7}
   m_SizeDelta: {x: 729.52, y: 393.2613}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1677752259
@@ -1148,7 +1149,8 @@ MonoBehaviour:
     m_LineSpacing: 1.24
   m_Text: 'Welcome to training camp, Anya!
 
-    Walk to the Operator!'
+    [Tap on screen] or [WASD] to move
+    to Operator'
 --- !u!222 &1677752260
 CanvasRenderer:
   m_ObjectHideFlags: 0
