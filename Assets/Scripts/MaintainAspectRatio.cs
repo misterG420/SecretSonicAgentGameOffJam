@@ -1,13 +1,27 @@
 using UnityEngine;
 
-public class MaintainAsectRatio : MonoBehaviour
+public class MaintainAspectRatio : MonoBehaviour
 {
+
+    public static MaintainAspectRatio Instance;
+
     private void Awake()
     {
-        // Lock  to Portrait
+
+        if (Instance != null)
+        {
+            Destroy(gameObject); 
+            return;
+        }
+
+
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
+
         Screen.orientation = ScreenOrientation.Portrait;
 
-        //Enforce resolution for Windows builds
+        //  resolution for Windows builds
 #if UNITY_STANDALONE
         SetResolutionForWindows();
 #endif
