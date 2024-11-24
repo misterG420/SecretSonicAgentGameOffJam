@@ -1728,7 +1728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4273527328001199634, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4699707
+      value: -1.83
       objectReference: {fileID: 0}
     - target: {fileID: 4273527328001199634, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1782,9 +1782,17 @@ PrefabInstance:
       propertyPath: gunSprites.Array.data[1]
       value: 
       objectReference: {fileID: 1902218589752714868}
+    - target: {fileID: 6877306472705124261, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.077
+      objectReference: {fileID: 0}
     - target: {fileID: 7758724178906721103, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
       propertyPath: m_Color.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8213461284068024996, guid: 742d2d7abce93c443b02cb9eaf518ff3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.117
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
