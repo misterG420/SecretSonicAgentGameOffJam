@@ -6,27 +6,42 @@ public class NAudioTest : MonoBehaviour
 {
     void Start()
     {
+        CheckHeadphones();
+    }
+
+    private void CheckHeadphones()
+    {
         try
         {
-            var enumerator = new MMDeviceEnumerator();
+
+            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+
+  
             var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
 
-            if (devices.Count > 0)
+            bool headphonesPluggedIn = false;
+
+
+            foreach (var device in devices)
             {
-                Debug.Log("Audio devices detected:");
-                foreach (var device in devices)
+                Debug.Log($"Device found: {device.FriendlyName}");
+
+                if (device.FriendlyName.ToLower().Contains("headphone"))
                 {
-                    Debug.Log(device.FriendlyName);
+                    headphonesPluggedIn = true;
+                    Debug.Log("Headphones are plugged in.");
+                    break;
                 }
             }
-            else
+
+            if (!headphonesPluggedIn)
             {
-                Debug.LogWarning("No active audio devices found.");
+                Debug.LogWarning("No headphones detected.");
             }
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Failed to initialize audio device enumerator: {ex.Message}");
+            Debug.LogError($"Error in NAudioTest: {ex.Message}");
         }
     }
 }
