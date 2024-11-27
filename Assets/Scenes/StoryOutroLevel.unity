@@ -1159,8 +1159,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 68.08038, y: 46.243286}
-  m_SizeDelta: {x: 676.3833, y: 173.8678}
+  m_AnchoredPosition: {x: 68.08038, y: -70.927246}
+  m_SizeDelta: {x: 676.3833, y: 549.9031}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &854907299
 MonoBehaviour:
@@ -1193,7 +1193,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: New Text
 --- !u!222 &854907300
@@ -1234,9 +1234,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueText: {fileID: 854907299}
-  button1: {fileID: 0}
-  button2: {fileID: 0}
-  dialogueLines: []
+  goodSidebutton1: {fileID: 772935309}
+  darkSidebutton2: {fileID: 815089921}
+  dialogueLines:
+  - We've underestimated you, Anya...
+  - No mission too hard, no evil too evil for me...
+  - How would you...feel about joining the Club of Evil...
+  - Join the dark side? I am a Secret Agent, loyal to my people...
+  - Oh, don't you know...it's all just been a dream...
+  - You can be as evil as you want in your dreams....
+  - For example, you can have ALL THE COOKIES in the world...
+  - Muhhaahhaaaa
+  typingSpeed: 0.05
 --- !u!4 &1422975759
 Transform:
   m_ObjectHideFlags: 0
