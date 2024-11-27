@@ -63,6 +63,16 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene("Level4");
     }
 
+    public void LoadLevel5()
+    {
+        SceneManager.LoadScene("Level5");
+    }
+
+    public void LoadLevel6()
+    {
+        SceneManager.LoadScene("Level6");
+    }
+
     public void LoadLevelSelector()
     {
         SceneManager.LoadScene("CheatCodeLevelSelector");
