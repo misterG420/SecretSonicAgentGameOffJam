@@ -8,12 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 10c317d2ccf65134ea0d3bf8a1268766
-  - enabled: 0
-    path: Assets/Scenes/IntroMenu.unity
-    guid: cbfb3891fa52848468cfa603311f0838
-  - enabled: 0
-    path: Assets/Scenes/PreLevelInstructions.unity
-    guid: 4acf1d706fb521b4190c74e027b3b611
   - enabled: 1
     path: Assets/Scenes/CheatCodeUnlockLevel.unity
     guid: 153ae39506a29584188df8ce3223cbad
@@ -41,4 +35,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level4.unity
     guid: 554f6a8021a42f44fa2c4d2b00c97a6b
+  - enabled: 1
+    path: Assets/Scenes/Level5.unity
+    guid: 09bc42d3a4f3e5b40b26c0fd0a3b61e0
+  - enabled: 1
+    path: Assets/Scenes/Level6.unity
+    guid: 182b836f1c47d0540a6160d1ad3ba8c7
+  - enabled: 1
+    path: Assets/Scenes/StoryOutroLevelGoodSide.unity
+    guid: 795c1d6345676da4fa18eeb48c91500d
   m_configObjects: {}

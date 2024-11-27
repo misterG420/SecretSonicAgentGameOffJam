@@ -78,9 +78,20 @@ public class LevelSelectorScript : MonoBehaviour
         SceneManager.LoadScene("StoryOutroLevel");
     }
 
+    
     public void LoadLevelSelector()
     {
         SceneManager.LoadScene("CheatCodeLevelSelector");
+    }
+
+    public void LoadStoryOutroLevelGoodSide()
+    {
+        SceneManager.LoadScene("StoryOutroLevelGoodSide");
+    }
+
+    public void LoadStoryOutroLevelBadSide()
+    {
+        SceneManager.LoadScene("StoryOutroLevelBadSide");
     }
 
 
