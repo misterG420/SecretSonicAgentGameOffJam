@@ -42,6 +42,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Level6.unity
     guid: 182b836f1c47d0540a6160d1ad3ba8c7
   - enabled: 1
+    path: Assets/Scenes/StoryOutroLevel.unity
+    guid: 18ad8d867735cac4aa11208c244acba7
+  - enabled: 1
     path: Assets/Scenes/StoryOutroLevelGoodSide.unity
     guid: 795c1d6345676da4fa18eeb48c91500d
+  - enabled: 1
+    path: Assets/Scenes/StoryOutroLevelDarkSide.unity
+    guid: 5ac9f22ae9fb7d44c9cebbdb29755ffc
   m_configObjects: {}
