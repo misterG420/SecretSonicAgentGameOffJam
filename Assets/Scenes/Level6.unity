@@ -1035,7 +1035,7 @@ GameObject:
   - component: {fileID: 1235162326}
   - component: {fileID: 1235162325}
   m_Layer: 0
-  m_Name: EnemySpawner (1)
+  m_Name: EnemySpawner2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1924,7 +1924,7 @@ MonoBehaviour:
   bestTimeText: {fileID: 9138346254940888560}
   benchmarkTimeText: {fileID: 1887076638147450569}
   specialAchievementText: {fileID: 8710044073787837598}
-  achievementBenchmarkTime: 60
+  achievementBenchmarkTime: 45
   achievementSprite: {fileID: 21300000, guid: bc3200b9638c17d46b46cb7802b68227, type: 3}
 --- !u!4 &1596958625
 Transform:
@@ -2222,7 +2222,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Last lvl
+  m_Text: Continue
 --- !u!1 &327322659445001981
 GameObject:
   m_ObjectHideFlags: 0
@@ -2647,7 +2647,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5827687316147917807}
         m_TargetAssemblyTypeName: LevelSelectorScript, Assembly-CSharp
-        m_MethodName: LoadLevel5
+        m_MethodName: LoadLevel6
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2819,7 +2819,7 @@ GameObject:
   - component: {fileID: 7146965421020642200}
   - component: {fileID: 1024931583060265016}
   m_Layer: 5
-  m_Name: NextLvLButton
+  m_Name: ContinueButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3571,7 +3571,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1024931583060265016}
         m_TargetAssemblyTypeName: LevelSelectorScript, Assembly-CSharp
-        m_MethodName: LoadLevel6
+        m_MethodName: LoadStoryOutroLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
