@@ -881,7 +881,7 @@ MonoBehaviour:
   benchmarkTimeText: {fileID: 1887076638576603722}
   specialAchievementText: {fileID: 8710044073431574557}
   achievementBenchmarkTime: 45
-  achievementSprite: {fileID: 21300000, guid: 747482b0e8155f54c8cf57219f1b1b3e, type: 3}
+  achievementSprite: {fileID: 21300000, guid: fb8392f8b3b15e948858068c5c34997a, type: 3}
 --- !u!1 &1088877316
 GameObject:
   m_ObjectHideFlags: 0

@@ -1099,7 +1099,7 @@ MonoBehaviour:
   benchmarkTimeText: {fileID: 2087305590404165222}
   specialAchievementText: {fileID: 9090495762987709489}
   achievementBenchmarkTime: 20
-  achievementSprite: {fileID: 21300000, guid: f4609336d07e42c45b7dbf0cf93665ed, type: 3}
+  achievementSprite: {fileID: 21300000, guid: fb8392f8b3b15e948858068c5c34997a, type: 3}
 --- !u!1001 &1958527215
 PrefabInstance:
   m_ObjectHideFlags: 0

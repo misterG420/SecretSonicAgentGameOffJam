@@ -1709,7 +1709,7 @@ MonoBehaviour:
   benchmarkTimeText: {fileID: 1887076638147450569}
   specialAchievementText: {fileID: 8710044073787837598}
   achievementBenchmarkTime: 45
-  achievementSprite: {fileID: 21300000, guid: bc3200b9638c17d46b46cb7802b68227, type: 3}
+  achievementSprite: {fileID: 21300000, guid: fb8392f8b3b15e948858068c5c34997a, type: 3}
 --- !u!4 &1596958625
 Transform:
   m_ObjectHideFlags: 0
