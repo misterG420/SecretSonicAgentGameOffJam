@@ -82,7 +82,7 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void LoadStoryOutroLevelBadSide()
     {
-        SceneManager.LoadScene("StoryOutroLevelBadSide");
+        SceneManager.LoadScene("StoryOutroLevelDarkSide");
     }
 
 
