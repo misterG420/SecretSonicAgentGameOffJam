@@ -4,7 +4,7 @@ using UnityEngine;
 public class SoftAudioFadeOutFromCurrentVolume : MonoBehaviour
 {
     private AudioSource audioSource;
-    private float fadeStartTime = 24f;
+    public float fadeStartTime = 24f;
     private float fadeDuration = 8f;
     private bool isFading = false;
     private float fadeTimer = 0f;
@@ -33,6 +33,7 @@ public class SoftAudioFadeOutFromCurrentVolume : MonoBehaviour
             if (fadeTimer >= fadeDuration)
             {
                 audioSource.volume = 0f;
+                audioSource.Stop();
                 isFading = false;
             }
         }
